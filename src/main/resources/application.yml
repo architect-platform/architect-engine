@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: architect-engine
+  server:
+    port: 8080
+
+endpoints:
+  health:
+    sensitive: false

@@ -1,0 +1,5 @@
+installers:
+  owner: architectplatform
+  name: architect-engine
+  assetType: jar
+  applicationName: architect-engine
