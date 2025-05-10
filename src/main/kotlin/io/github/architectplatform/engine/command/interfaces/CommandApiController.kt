@@ -17,11 +17,13 @@ class CommandApiController(
 
 	@Get
 	fun getAll(): List<String> {
+		println("Getting all commands")
 		return commandRegistry.getAllCommandNames()
 	}
 
 	@Get("/{name}")
 	fun getCommand(@PathVariable name: String): ApiCommandDTO? {
+		println("Getting command: $name")
 		val command = commandRegistry.get(name)
 			?: return null
 
