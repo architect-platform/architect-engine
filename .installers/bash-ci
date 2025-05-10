@@ -6,7 +6,7 @@
 
 set -e
 
-OWNER="architectplatform"
+OWNER="architect-platform"
 NAME="architect-engine"
 ASSET_TYPE="jar"
 APPLICATION_NAME="architect-engine"
