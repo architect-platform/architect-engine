@@ -1,11 +1,11 @@
 package io.github.architectplatform.engine.command.interfaces.dto
 
 import io.micronaut.serde.annotation.Serdeable
-import java.util.Collections.emptyList
 
 @Serdeable
-data class ApiCommandRequest(
+data class ApiCommandDTO(
 	val name: String,
-	val args: List<String> = emptyList()
+	val description: String,
+	val usage: String,
+	val subcommands: List<ApiCommandDTO> = emptyList()
 )
-

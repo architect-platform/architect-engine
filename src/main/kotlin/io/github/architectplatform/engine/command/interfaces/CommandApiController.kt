@@ -3,6 +3,7 @@ package io.github.architectplatform.engine.command.interfaces
 import io.github.architectplatform.api.command.CommandRequest
 import io.github.architectplatform.engine.command.interfaces.dto.ApiCommandResponse
 import io.github.architectplatform.engine.command.application.CommandRegistry
+import io.github.architectplatform.engine.command.interfaces.dto.ApiCommandDTO
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -20,11 +21,11 @@ class CommandApiController(
 	}
 
 	@Get("/{name}")
-	fun getCommand(name: String): CommandDTO? {
+	fun getCommand(@PathVariable name: String): ApiCommandDTO? {
 		val command = commandRegistry.get(name)
 			?: return null
 
-		return CommandDTO(
+		return ApiCommandDTO(
 			name = command.name,
 			description = command.description,
 			usage = command.usage,
@@ -46,12 +47,4 @@ class CommandApiController(
 		}
 	}
 
-	companion object {
-		data class CommandDTO(
-			val name: String,
-			val description: String,
-			val usage: String,
-			val subcommands: List<CommandDTO> = emptyList()
-		)
-	}
 }
