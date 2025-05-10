@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine
+package io.github.architectplatform.engine.command.interfaces
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get

@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.command
+package io.github.architectplatform.engine.command.application
 
 import io.github.architectplatform.api.command.Command
 
@@ -23,6 +23,14 @@ interface CommandRegistry {
 	 * @return The command implementation, or null if not found.
 	 */
 	fun get(name: String): Command<*>?
+
+
+	/**
+	 * Retrieves all registered command names.
+	 *
+	 * @return A list of all command names.
+	 */
+	fun getAllCommandNames(): List<String>
 }
 
 

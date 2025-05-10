@@ -1,8 +1,7 @@
-package io.github.architectplatform.engine.command
+package io.github.architectplatform.engine.command.application
 
 import io.github.architectplatform.api.command.Command
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Singleton
 
 /**
  * A class that loads commands into the command registry.

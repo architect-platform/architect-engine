@@ -1,6 +1,7 @@
-package io.github.architectplatform.engine.command
+package io.github.architectplatform.engine.command.infra
 
 import io.github.architectplatform.api.command.Command
+import io.github.architectplatform.engine.command.application.CommandRegistry
 import jakarta.inject.Singleton
 
 @Singleton
@@ -16,5 +17,9 @@ class InMemoryCommandRegistry : CommandRegistry {
 
 	override fun get(name: String): Command<*>? {
 		return commands[name]
+	}
+
+	override fun getAllCommandNames(): List<String> {
+		return commands.keys.toList()
 	}
 }

@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.command
+package io.github.architectplatform.engine.tasks.build
 
 import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.build.BuildTaskResult

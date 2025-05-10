@@ -3,7 +3,3 @@ micronaut:
     name: architect-engine
   server:
     port: 9292
-
-endpoints:
-  health:
-    sensitive: false

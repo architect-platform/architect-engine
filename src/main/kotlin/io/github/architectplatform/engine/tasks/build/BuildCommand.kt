@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.command
+package io.github.architectplatform.engine.tasks.build
 
 import io.github.architectplatform.api.command.Command
 import io.github.architectplatform.api.command.CommandRequest
@@ -12,7 +12,7 @@ class BuildCommand(val tasks: List<BuildTask>): Command<BuildCommandResult> {
 	override fun execute(request: CommandRequest): BuildCommandResult {
 		println("Executing build command")
 		val results = tasks.map { task ->
-			println("Building task: ${task.name}")
+			println("Running task: ${task.name}")
 			task.execute(request)
 		}
 		println("Build command completed")
