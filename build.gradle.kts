@@ -19,7 +19,7 @@ repositories {
 		url = uri("https://maven.pkg.github.com/architect-platform/architect-api")
 		credentials {
 			username = System.getenv("GITHUB_USER") ?: project.findProperty("githubUser") as String? ?: "github-actions"
-			password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubToken") as String?
+			password = System.getenv("REGISTRY_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubToken") as String?
 		}
 	}
 }
