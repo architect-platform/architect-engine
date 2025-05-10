@@ -1,7 +1,7 @@
 tmp
 temp
 .gradle/
-build
+/build
 target
 architect-cli/build
 .idea/
