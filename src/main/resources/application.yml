@@ -2,7 +2,7 @@ micronaut:
   application:
     name: architect-engine
   server:
-    port: 8080
+    port: 9292
 
 endpoints:
   health:

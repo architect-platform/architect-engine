@@ -11,11 +11,22 @@ version = "0.1"
 group = "io.github.architectplatform"
 
 val kotlinVersion=project.properties.get("kotlinVersion")
+
 repositories {
 	mavenCentral()
+	maven {
+		name = "GitHubPackages"
+		url = uri("https://maven.pkg.github.com/architect-platform/architect-api")
+		credentials {
+			username = System.getenv("GITHUB_USER") ?: project.findProperty("githubUser") as String? ?: "github-actions"
+			password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubToken") as String?
+		}
+	}
 }
 
 dependencies {
+	implementation("io.github.architectplatform:architect-api:1.2.0")
+
 	ksp("io.micronaut:micronaut-http-validation")
 	ksp("io.micronaut.serde:micronaut-serde-processor")
 	implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
