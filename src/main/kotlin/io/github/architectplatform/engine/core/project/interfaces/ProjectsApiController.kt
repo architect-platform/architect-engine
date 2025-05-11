@@ -1,8 +1,6 @@
 package io.github.architectplatform.engine.core.project.interfaces
 
 import io.github.architectplatform.api.command.CommandRequest
-import io.github.architectplatform.engine.core.command.application.CommandService
-import io.github.architectplatform.engine.core.context.application.ContextService
 import io.github.architectplatform.engine.core.project.application.domain.Project
 import io.github.architectplatform.engine.core.project.application.domain.ProjectFactory
 import io.github.architectplatform.engine.core.project.application.ProjectService
@@ -15,17 +13,26 @@ import io.github.architectplatform.engine.core.project.interfaces.dto.toApiDTO
 import io.github.architectplatform.engine.core.project.interfaces.dto.toApiResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
 
+
 @Controller("/api/projects")
 class ProjectsApiController(
-	private val commandService: CommandService,
-	private val contextService: ContextService,
 	private val projectService: ProjectService,
 	private val projectFactory: ProjectFactory
 ) {
+
+	@Error(global = true)
+	fun handleError(exception: Exception): ApiCommandResponse {
+		println("Error occurred: ${exception.message}")
+		return ApiCommandResponse(
+			success = false,
+			output = exception.message ?: "Unknown error",
+		)
+	}
 
 	@Get
 	fun getAll(): List<ApiProjectDTO> {
@@ -44,22 +51,26 @@ class ProjectsApiController(
 	fun registerProject(@Body request: ApiRegisterProjectRequest): ApiProjectDTO {
 		println("Registering project: ${request.name} at path: ${request.path}")
 		val project = projectFactory.createProject(request.name, request.path)
-		projectService.registerProject(project)
+		projectService.loadProject(project)
 		return project.toApiDTO().also { println("Project registered: $it") }
 	}
 
 	@Get("/{projectName}/commands")
 	fun getAll(@PathVariable projectName: String): List<ApiCommandDTO> {
 		println("Getting all commands for project: $projectName")
-		val commands = commandService.getAllCommands()
-		return commands.map { it.toApiDTO() }.also { println("Commands found: $it") }
+		val commands = projectService.getProject(projectName)?.commands
+			?: throw IllegalArgumentException("Project not found: $projectName")
+		return commands.values.map { it.toApiDTO() }.also { println("Commands found: $it") }
 	}
 
 	@Get("/{projectName}/commands/{commandName}")
-	fun getCommand(@PathVariable projectName: String, @PathVariable commandName: String): ApiCommandDTO? {
+	fun getCommand(@PathVariable projectName: String, @PathVariable commandName: String): ApiCommandDTO {
 		println("Getting command: $commandName for project: $projectName")
-		val command = commandService.getCommand(commandName)
-		return command?.toApiDTO().also { println("Command found: $it") }
+		val project = projectService.getProject(projectName)
+			?: throw IllegalArgumentException("Project not found: $projectName")
+		val command = project.commands[commandName]
+			?: throw IllegalArgumentException("Command not found: $commandName")
+		return command.toApiDTO().also { println("Command found: $it") }
 	}
 
 	@Post("/{projectName}/commands/{commandName}")
@@ -71,13 +82,18 @@ class ProjectsApiController(
 		println("Executing command: $commandName for project: $projectName with args: $args")
 		val project = projectService.getProject(projectName)
 			?: throw IllegalArgumentException("Project not found: $projectName")
-		return commandService.executeCommand(commandName, CommandRequest(project.path, args))
-			.toApiResponse().also { println("Command executed with result: $it") }
+		val command = project.commands[commandName]
+			?: throw IllegalArgumentException("Command not found: $commandName")
+		val commandRequest = CommandRequest(project.path, args)
+		val commandResult = command.execute(commandRequest)
+		return commandResult.toApiResponse().also { println("Command result: $it") }
 	}
 
 	@Get("/{projectName}/context")
 	fun getContext(@PathVariable projectName: String): ContextDTO {
-		return contextService.getContext(projectName).toApiDTO().also { println("Context found: $it") }
+		val project = projectService.getProject(projectName)
+			?: throw IllegalArgumentException("Project not found: $projectName")
+		return project.context.toApiDTO().also { println("Context found: $it") }
 	}
 
 }
