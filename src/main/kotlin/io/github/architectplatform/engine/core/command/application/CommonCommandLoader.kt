@@ -1,11 +1,10 @@
 package io.github.architectplatform.engine.core.command.application
 
 import io.github.architectplatform.api.command.Command
-import io.github.architectplatform.api.context.Context
 import jakarta.inject.Singleton
 
 @Singleton
-class CommandLoader(
+class CommonCommandLoader(
 	private val internalCommands: List<Command<*>>,
 ) {
 	fun getCommands(): Map<String, Command<*>> {

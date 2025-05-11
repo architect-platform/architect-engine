@@ -1,12 +1,12 @@
 package io.github.architectplatform.engine.commons.tasks.init
 
-import io.github.architectplatform.api.command.Command
+import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest
 import io.github.architectplatform.api.tasks.init.InitTask
 import jakarta.inject.Singleton
 
 @Singleton
-class InitCommand(val tasks: List<InitTask>): Command<InitCommandResult> {
+class InitCommand(val tasks: List<InitTask>) : AbstractCommand<InitCommandResult>() {
 	override val name: String = "init"
 
 	override fun execute(request: CommandRequest): InitCommandResult {

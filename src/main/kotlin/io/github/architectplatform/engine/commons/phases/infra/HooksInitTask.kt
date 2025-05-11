@@ -11,7 +11,7 @@ data class HooksInitTaskResult(
 ) : InitTaskResult
 
 @Singleton
-class HooksInitTask : InitTask {
+class HooksInitTask : InitTask() {
 	override val name: String = "hooks"
 
 	override fun execute(request: CommandRequest): InitTaskResult {

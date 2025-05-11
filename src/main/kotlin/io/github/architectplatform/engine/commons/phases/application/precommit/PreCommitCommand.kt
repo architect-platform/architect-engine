@@ -1,13 +1,13 @@
 package io.github.architectplatform.engine.commons.phases.application.precommit
 
-import io.github.architectplatform.api.command.Command
+import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest
 import io.github.architectplatform.api.phases.precommit.PreCommitPhase
 import io.github.architectplatform.api.phases.precommit.PreCommitPhaseResult
 import jakarta.inject.Singleton
 
 @Singleton
-class PreCommitCommand(val tasks: List<PreCommitPhase>): Command<PreCommitPhaseResult> {
+class PreCommitCommand(val tasks: List<PreCommitPhase>) : AbstractCommand<PreCommitPhaseResult>() {
 	override val name: String = "pre-commit"
 
 	override fun execute(request: CommandRequest): PreCommitPhaseResult {

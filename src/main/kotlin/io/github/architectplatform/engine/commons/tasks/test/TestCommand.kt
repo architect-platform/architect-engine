@@ -1,12 +1,12 @@
 package io.github.architectplatform.engine.commons.tasks.test
 
-import io.github.architectplatform.api.command.Command
+import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest
 import io.github.architectplatform.api.tasks.test.TestTask
 import jakarta.inject.Singleton
 
 @Singleton
-class TestCommand(val tasks: List<TestTask>): Command<TestCommandResult> {
+class TestCommand(val tasks: List<TestTask>) : AbstractCommand<TestCommandResult>() {
 	override val name: String = "test"
 
 	override fun execute(request: CommandRequest): TestCommandResult {

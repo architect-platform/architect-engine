@@ -1,9 +1,9 @@
 package io.github.architectplatform.engine.core.project.interfaces
 
 import io.github.architectplatform.api.command.CommandRequest
+import io.github.architectplatform.engine.core.project.application.ProjectService
 import io.github.architectplatform.engine.core.project.application.domain.Project
 import io.github.architectplatform.engine.core.project.application.domain.ProjectFactory
-import io.github.architectplatform.engine.core.project.application.ProjectService
 import io.github.architectplatform.engine.core.project.interfaces.dto.ApiCommandDTO
 import io.github.architectplatform.engine.core.project.interfaces.dto.ApiCommandResponse
 import io.github.architectplatform.engine.core.project.interfaces.dto.ApiProjectDTO
@@ -22,7 +22,7 @@ import io.micronaut.http.annotation.Post
 @Controller("/api/projects")
 class ProjectsApiController(
 	private val projectService: ProjectService,
-	private val projectFactory: ProjectFactory
+	private val projectFactory: ProjectFactory,
 ) {
 
 	@Error(global = true)
@@ -68,7 +68,7 @@ class ProjectsApiController(
 		println("Getting command: $commandName for project: $projectName")
 		val project = projectService.getProject(projectName)
 			?: throw IllegalArgumentException("Project not found: $projectName")
-		val command = project.commands[commandName]
+		val command = project.getCommand(commandName)
 			?: throw IllegalArgumentException("Command not found: $commandName")
 		return command.toApiDTO().also { println("Command found: $it") }
 	}
@@ -77,12 +77,12 @@ class ProjectsApiController(
 	fun executeCommand(
 		@PathVariable projectName: String,
 		@PathVariable commandName: String,
-		@Body args: List<String>
+		@Body args: List<String>,
 	): ApiCommandResponse {
 		println("Executing command: $commandName for project: $projectName with args: $args")
 		val project = projectService.getProject(projectName)
 			?: throw IllegalArgumentException("Project not found: $projectName")
-		val command = project.commands[commandName]
+		val command = project.getCommand(commandName)
 			?: throw IllegalArgumentException("Command not found: $commandName")
 		val commandRequest = CommandRequest(project.path, args)
 		val commandResult = command.execute(commandRequest)

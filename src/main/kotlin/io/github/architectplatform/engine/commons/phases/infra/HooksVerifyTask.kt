@@ -8,10 +8,10 @@ import jakarta.inject.Singleton
 data class HooksVerifyTaskResult(
 	override val success: Boolean = true,
 	override val output: String = "",
-): VerifyTaskResult
+) : VerifyTaskResult
 
 @Singleton
-class HooksVerifyTask : VerifyTask {
+class HooksVerifyTask : VerifyTask() {
 
 	override val name: String = "hooks-verify"
 
