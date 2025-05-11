@@ -4,9 +4,6 @@ import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.verify.VerifyTaskResult
 
 interface VerifyCommandResult : CommandResult {
-	/**
-	 * The result of the precommit command.
-	 */
 	val results: List<VerifyTaskResult>
 
 	data class Success(

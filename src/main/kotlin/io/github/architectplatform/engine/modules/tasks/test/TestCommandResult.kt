@@ -1,12 +1,9 @@
-package io.github.architectplatform.engine.tasks.test
+package io.github.architectplatform.engine.modules.tasks.test
 
 import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.test.TestTaskResult
 
 interface TestCommandResult : CommandResult {
-	/**
-	 * The result of the precommit command.
-	 */
 	val results: List<TestTaskResult>
 
 	data class Success(

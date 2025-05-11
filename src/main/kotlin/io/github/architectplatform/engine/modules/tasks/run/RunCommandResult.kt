@@ -4,9 +4,6 @@ import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.run.RunTaskResult
 
 interface RunCommandResult : CommandResult {
-	/**
-	 * The result of the precommit command.
-	 */
 	val results: List<RunTaskResult>
 
 	data class Success(

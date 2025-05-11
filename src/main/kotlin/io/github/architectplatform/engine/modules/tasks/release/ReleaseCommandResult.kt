@@ -4,9 +4,6 @@ import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.release.ReleaseTaskResult
 
 interface ReleaseCommandResult : CommandResult {
-	/**
-	 * The result of the precommit command.
-	 */
 	val results: List<ReleaseTaskResult>
 
 	data class Success(

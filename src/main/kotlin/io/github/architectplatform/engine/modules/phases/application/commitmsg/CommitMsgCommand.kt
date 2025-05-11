@@ -16,7 +16,7 @@ class CommitMsgCommand(val tasks: List<CommitMsgPhase>): Command<CommitMsgPhaseR
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}
-		println("CommitMsg command completed")
+		println("commit-msg command completed")
 		return Success(results)
 	}
 

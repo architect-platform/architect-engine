@@ -15,7 +15,7 @@ class PublishCommand(val tasks: List<PublishTask>): Command<PublishCommandResult
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}
-		println("Run command completed")
+		println("Publish command completed")
 		return PublishCommandResult.Success(results)
 	}
 }

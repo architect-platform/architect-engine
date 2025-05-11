@@ -15,7 +15,7 @@ class ReleaseCommand(val tasks: List<ReleaseTask>): Command<ReleaseCommandResult
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}
-		println("Run command completed")
+		println("Release command completed")
 		return ReleaseCommandResult.Success(results)
 	}
 }

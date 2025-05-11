@@ -16,7 +16,7 @@ class PreCommitCommand(val tasks: List<PreCommitPhase>): Command<PreCommitPhaseR
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}
-		println("PreCommit command completed")
+		println("pre-commit command completed")
 		return Success(results)
 	}
 

@@ -16,7 +16,7 @@ class PrePushCommand(val tasks: List<PrePushPhase>): Command<PrePushPhaseResult>
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}
-		println("PrePush command completed")
+		println("pre-push command completed")
 		return Success(results)
 	}
 
