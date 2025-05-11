@@ -1,8 +1,5 @@
 package io.github.architectplatform.engine.core.project.application
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.engine.core.command.application.CommandLoader
 import io.github.architectplatform.engine.core.context.application.ContextLoader
 import io.github.architectplatform.engine.core.plugin.PluginLoader
@@ -18,15 +15,11 @@ class ProjectService(
 	private val pluginLoader: PluginLoader,
 ) {
 
-	private val objectMapper = ObjectMapper().registerKotlinModule()
-
 	fun loadProject(project: Project) {
 		println("Loading project ${project.name}...")
 		project.context = contextLoader.getContext(project.path)
 		project.commands = commandLoader.getCommands()
-		val definition = project.context["project"] ?: throw IllegalArgumentException("Project definition not found in context")
-		val projectDefinition: ProjectDefinition = objectMapper.convertValue(definition)
-		project.plugins = pluginLoader.load(projectDefinition.plugins)
+		project.plugins = pluginLoader.load(project.context)
 		projectRepository.register(project.name, project)
 	}
 
