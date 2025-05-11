@@ -25,13 +25,15 @@ repositories {
 }
 
 dependencies {
-	implementation("io.github.architectplatform:architect-api:1.3.1")
+	implementation("io.github.architectplatform:architect-api:1.4.0")
 	ksp("io.micronaut:micronaut-http-validation")
 	ksp("io.micronaut.serde:micronaut-serde-processor")
 	implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
 	implementation("io.micronaut.serde:micronaut-serde-jackson")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	compileOnly("io.micronaut:micronaut-http-client")
 	runtimeOnly("ch.qos.logback:logback-classic")
 	runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
