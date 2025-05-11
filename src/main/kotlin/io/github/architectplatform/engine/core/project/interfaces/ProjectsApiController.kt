@@ -30,14 +30,14 @@ class ProjectsApiController(
 	@Get
 	fun getAll(): List<ApiProjectDTO> {
 		println("Getting all projects")
-		return projectService.getAllProjects().map(Project::toApiDTO)
+		return projectService.getAllProjects().map(Project::toApiDTO).also { println("Projects found: $it") }
 	}
 
 	@Get("/{name}")
 	fun getProject(@PathVariable name: String): ApiProjectDTO? {
 		println("Getting project: $name")
 		val project = projectService.getProject(name)
-		return project?.toApiDTO()
+		return project?.toApiDTO().also { println("Project found: $it") }
 	}
 
 	@Post
@@ -45,21 +45,21 @@ class ProjectsApiController(
 		println("Registering project: ${request.name} at path: ${request.path}")
 		val project = projectFactory.createProject(request.name, request.path)
 		projectService.registerProject(project)
-		return project.toApiDTO()
+		return project.toApiDTO().also { println("Project registered: $it") }
 	}
 
 	@Get("/{projectName}/commands")
 	fun getAll(@PathVariable projectName: String): List<ApiCommandDTO> {
 		println("Getting all commands for project: $projectName")
 		val commands = commandService.getAllCommands()
-		return commands.map { it.toApiDTO() }
+		return commands.map { it.toApiDTO() }.also { println("Commands found: $it") }
 	}
 
 	@Get("/{projectName}/commands/{commandName}")
 	fun getCommand(@PathVariable projectName: String, @PathVariable commandName: String): ApiCommandDTO? {
 		println("Getting command: $commandName for project: $projectName")
 		val command = commandService.getCommand(commandName)
-		return command?.toApiDTO()
+		return command?.toApiDTO().also { println("Command found: $it") }
 	}
 
 	@Post("/{projectName}/commands/{commandName}")
@@ -72,12 +72,12 @@ class ProjectsApiController(
 		val project = projectService.getProject(projectName)
 			?: throw IllegalArgumentException("Project not found: $projectName")
 		return commandService.executeCommand(commandName, CommandRequest(project.path, args))
-			.toApiResponse()
+			.toApiResponse().also { println("Command executed with result: $it") }
 	}
 
 	@Get("/{projectName}/context")
 	fun getContext(@PathVariable projectName: String): ContextDTO {
-		return contextService.getContext(projectName).toApiDTO()
+		return contextService.getContext(projectName).toApiDTO().also { println("Context found: $it") }
 	}
 
 }

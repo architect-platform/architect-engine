@@ -7,13 +7,11 @@ import io.micronaut.serde.annotation.Serdeable
 data class ApiProjectDTO(
 	val name: String,
 	val path: String,
-	val description: String,
 )
 
 fun Project.toApiDTO(): ApiProjectDTO {
 	return ApiProjectDTO(
 		name = name,
 		path = path,
-		description = description,
 	)
 }
