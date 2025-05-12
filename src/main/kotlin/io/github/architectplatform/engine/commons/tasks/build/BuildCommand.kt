@@ -16,6 +16,6 @@ class BuildCommand(val tasks: List<BuildTask>) : AbstractCommand<BuildCommandRes
 			task.execute(request)
 		}
 		println("Build command completed")
-		return BuildCommandResult.Success(results)
+		return BuildCommandResult.success(results)
 	}
 }

@@ -3,18 +3,24 @@ package io.github.architectplatform.engine.commons.tasks.build
 import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.build.BuildTaskResult
 
-interface BuildCommandResult : CommandResult {
-	val results: List<BuildTaskResult>
+open class BuildCommandResult(
+	success: Boolean,
+	output: String,
+	open val results: List<BuildTaskResult>,
+) : CommandResult(success, output) {
+	companion object {
+		fun success(
+			results: List<BuildTaskResult>,
+			output: String = "",
+		): BuildCommandResult {
+			return BuildCommandResult(true, output, results)
+		}
 
-	data class Success(
-		override val results: List<BuildTaskResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : BuildCommandResult
-
-	data class Failure(
-		override val results: List<BuildTaskResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : BuildCommandResult
+		fun failure(
+			results: List<BuildTaskResult>,
+			output: String = "",
+		): BuildCommandResult {
+			return BuildCommandResult(false, output, results)
+		}
+	}
 }

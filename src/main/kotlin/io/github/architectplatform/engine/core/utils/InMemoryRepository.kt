@@ -3,10 +3,7 @@ package io.github.architectplatform.engine.core.utils
 abstract class InMemoryRepository<T> : Repository<T> {
 	private val objects = mutableMapOf<String, T>()
 
-	override fun register(key: String, obj: T) {
-		if (objects.containsKey(key)) {
-			throw IllegalArgumentException("Object with name $key already exists.")
-		}
+	override fun save(key: String, obj: T) {
 		objects[key] = obj
 	}
 

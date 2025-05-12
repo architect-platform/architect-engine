@@ -17,19 +17,7 @@ class PrePushCommand(val tasks: List<PrePushPhase>) : AbstractCommand<PrePushPha
 			task.execute(request)
 		}
 		println("pre-push command completed")
-		return Success(results)
+		return PrePushPhaseResult.success("Results: $results")
 	}
-
-	data class Success(
-		val results: List<PrePushPhaseResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : PrePushPhaseResult
-
-	data class Failure(
-		val results: List<PrePushPhaseResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : PrePushPhaseResult
 }
 

@@ -16,6 +16,6 @@ class RunCommand(val tasks: List<RunTask>) : AbstractCommand<RunCommandResult>()
 			task.execute(request)
 		}
 		println("Run command completed")
-		return RunCommandResult.Success(results)
+		return RunCommandResult.success(results)
 	}
 }

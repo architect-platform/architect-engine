@@ -17,19 +17,8 @@ class CommitMsgCommand(val tasks: List<CommitMsgPhase>) : AbstractCommand<Commit
 			task.execute(request)
 		}
 		println("commit-msg command completed")
-		return Success(results)
+		return CommitMsgPhaseResult.success("Results: $results")
 	}
 
-	data class Success(
-		val results: List<CommitMsgPhaseResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : CommitMsgPhaseResult
-
-	data class Failure(
-		val results: List<CommitMsgPhaseResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : CommitMsgPhaseResult
 }
 

@@ -16,6 +16,6 @@ class TestCommand(val tasks: List<TestTask>) : AbstractCommand<TestCommandResult
 			task.execute(request)
 		}
 		println("Test command completed")
-		return TestCommandResult.Success(results)
+		return TestCommandResult.success(results)
 	}
 }

@@ -3,18 +3,24 @@ package io.github.architectplatform.engine.commons.tasks.publish
 import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.publish.PublishTaskResult
 
-interface PublishCommandResult : CommandResult {
-	val results: List<PublishTaskResult>
+open class PublishCommandResult(
+	success: Boolean,
+	output: String,
+	open val results: List<PublishTaskResult>,
+) : CommandResult(success, output) {
+	companion object {
+		fun success(
+			results: List<PublishTaskResult>,
+			output: String = "",
+		): PublishCommandResult {
+			return PublishCommandResult(true, output, results)
+		}
 
-	data class Success(
-		override val results: List<PublishTaskResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : PublishCommandResult
-
-	data class Failure(
-		override val results: List<PublishTaskResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : PublishCommandResult
+		fun failure(
+			results: List<PublishTaskResult>,
+			output: String = "",
+		): PublishCommandResult {
+			return PublishCommandResult(false, output, results)
+		}
+	}
 }

@@ -16,6 +16,6 @@ class InitCommand(val tasks: List<InitTask>) : AbstractCommand<InitCommandResult
 			task.execute(request)
 		}
 		println("Init command completed")
-		return InitCommandResult.Success(results)
+		return InitCommandResult.success(results)
 	}
 }

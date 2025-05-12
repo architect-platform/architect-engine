@@ -3,18 +3,24 @@ package io.github.architectplatform.engine.commons.tasks.release
 import io.github.architectplatform.api.command.CommandResult
 import io.github.architectplatform.api.tasks.release.ReleaseTaskResult
 
-interface ReleaseCommandResult : CommandResult {
-	val results: List<ReleaseTaskResult>
+open class ReleaseCommandResult(
+	success: Boolean,
+	output: String,
+	open val results: List<ReleaseTaskResult>,
+) : CommandResult(success, output) {
+	companion object {
+		fun success(
+			results: List<ReleaseTaskResult>,
+			output: String = "",
+		): ReleaseCommandResult {
+			return ReleaseCommandResult(true, output, results)
+		}
 
-	data class Success(
-		override val results: List<ReleaseTaskResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : ReleaseCommandResult
-
-	data class Failure(
-		override val results: List<ReleaseTaskResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : ReleaseCommandResult
+		fun failure(
+			results: List<ReleaseTaskResult>,
+			output: String = "",
+		): ReleaseCommandResult {
+			return ReleaseCommandResult(false, output, results)
+		}
+	}
 }

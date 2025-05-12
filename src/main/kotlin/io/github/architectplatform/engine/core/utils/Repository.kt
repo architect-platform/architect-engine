@@ -10,7 +10,7 @@ interface Repository<T> {
 	 * @param key The name of the object.
 	 * @param obj The object implementation.
 	 */
-	fun register(key: String, obj: T)
+	fun save(key: String, obj: T)
 
 	/**
 	 * Retrieves an object by its key.

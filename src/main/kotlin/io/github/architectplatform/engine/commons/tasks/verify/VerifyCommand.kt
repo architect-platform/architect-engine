@@ -16,6 +16,6 @@ class VerifyCommand(val tasks: List<VerifyTask>) : AbstractCommand<VerifyCommand
 			task.execute(request)
 		}
 		println("Verify command completed")
-		return VerifyCommandResult.Success(results)
+		return VerifyCommandResult.success(results)
 	}
 }

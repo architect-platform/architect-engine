@@ -16,6 +16,6 @@ class ReleaseCommand(val tasks: List<ReleaseTask>) : AbstractCommand<ReleaseComm
 			task.execute(request)
 		}
 		println("Release command completed")
-		return ReleaseCommandResult.Success(results)
+		return ReleaseCommandResult.success(results)
 	}
 }

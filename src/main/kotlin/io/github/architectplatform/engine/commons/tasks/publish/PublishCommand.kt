@@ -16,6 +16,6 @@ class PublishCommand(val tasks: List<PublishTask>) : AbstractCommand<PublishComm
 			task.execute(request)
 		}
 		println("Publish command completed")
-		return PublishCommandResult.Success(results)
+		return PublishCommandResult.success(results)
 	}
 }

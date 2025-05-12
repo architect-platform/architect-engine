@@ -3,3 +3,12 @@ micronaut:
     name: architect-engine
   server:
     port: 9292
+
+architect:
+  engine:
+    project:
+      cache:
+        enabled: false
+    plugin:
+      cache:
+        enabled: false

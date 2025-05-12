@@ -17,19 +17,8 @@ class PreCommitCommand(val tasks: List<PreCommitPhase>) : AbstractCommand<PreCom
 			task.execute(request)
 		}
 		println("pre-commit command completed")
-		return Success(results)
+		return PreCommitPhaseResult.success("Results: $results")
 	}
 
-	data class Success(
-		val results: List<PreCommitPhaseResult>,
-		override val success: Boolean = true,
-		override val output: String = "",
-	) : PreCommitPhaseResult
-
-	data class Failure(
-		val results: List<PreCommitPhaseResult>,
-		override val success: Boolean = false,
-		override val output: String = "",
-	) : PreCommitPhaseResult
 }
 
