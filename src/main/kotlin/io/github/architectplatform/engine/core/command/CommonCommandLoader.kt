@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.core.command.application
+package io.github.architectplatform.engine.core.command
 
 import io.github.architectplatform.api.command.Command
 import jakarta.inject.Singleton

@@ -13,6 +13,15 @@ class Project(
 	var commands: Map<String, Command<*>>,
 	var plugins: Map<String, Plugin>,
 ) {
+
+	/**
+	 * Get all commands in the project.
+	 * This includes commands from plugins.
+	 */
+	fun getAllCommands(): List<Command<*>> {
+		return commands.values.toList() + plugins.values.flatMap { it.getCommands() }
+	}
+
 	/**
 	 * Get a command by its name.
 	 * If the command is not found, it will check if it is a plugin command.
@@ -32,6 +41,6 @@ class Project(
 
 		return null
 	}
-	
+
 }
 

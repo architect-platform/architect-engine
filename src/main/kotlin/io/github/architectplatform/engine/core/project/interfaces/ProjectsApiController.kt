@@ -58,9 +58,9 @@ class ProjectsApiController(
 	@Get("/{projectName}/commands")
 	fun getAll(@PathVariable projectName: String): List<ApiCommandDTO> {
 		println("Getting all commands for project: $projectName")
-		val commands = projectService.getProject(projectName)?.commands
+		val commands = projectService.getProject(projectName)?.getAllCommands()
 			?: throw IllegalArgumentException("Project not found: $projectName")
-		return commands.values.map { it.toApiDTO() }.also { println("Commands found: $it") }
+		return commands.map { it.toApiDTO() }.also { println("Commands found: $it") }
 	}
 
 	@Get("/{projectName}/commands/{commandName}")

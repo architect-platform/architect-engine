@@ -1,11 +1,10 @@
-package io.github.architectplatform.engine.core.plugin
+package io.github.architectplatform.engine.core.plugin.application
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.context.Context
 import io.github.architectplatform.api.plugins.Plugin
-import io.github.architectplatform.engine.core.plugin.application.PluginDownloader
 import io.github.architectplatform.engine.core.project.application.ProjectDefinition
 import jakarta.inject.Singleton
 import java.net.URLClassLoader

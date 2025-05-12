@@ -1,8 +1,8 @@
 package io.github.architectplatform.engine.core.project.application
 
-import io.github.architectplatform.engine.core.command.application.CommonCommandLoader
+import io.github.architectplatform.engine.core.command.CommonCommandLoader
 import io.github.architectplatform.engine.core.context.application.ContextLoader
-import io.github.architectplatform.engine.core.plugin.PluginLoader
+import io.github.architectplatform.engine.core.plugin.application.PluginLoader
 import io.github.architectplatform.engine.core.project.application.domain.Project
 import io.github.architectplatform.engine.core.project.application.repositories.ProjectRepository
 import jakarta.inject.Singleton
