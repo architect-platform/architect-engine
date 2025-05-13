@@ -4,15 +4,18 @@ import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest
 import io.github.architectplatform.api.phases.commitmsg.CommitMsgPhase
 import io.github.architectplatform.api.phases.commitmsg.CommitMsgPhaseResult
+import io.github.architectplatform.engine.core.command.CommandRegistry
 import jakarta.inject.Singleton
 
+
 @Singleton
-class CommitMsgCommand(val tasks: List<CommitMsgPhase>) : AbstractCommand<CommitMsgPhaseResult>() {
+class CommitMsgCommand(private val commandRegistry: CommandRegistry) : AbstractCommand<CommitMsgPhaseResult>() {
 	override val name: String = "commit-msg"
 
 	override fun execute(request: CommandRequest): CommitMsgPhaseResult {
 		println("Executing commit-msg command")
-		val results = tasks.map { task ->
+		val commitmsgs = commandRegistry.getByType<CommitMsgPhase>()
+		val results = commitmsgs.map { task ->
 			println("Running task: ${task.name}")
 			task.execute(request)
 		}

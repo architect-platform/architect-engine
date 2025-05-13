@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.application
 
-import io.github.architectplatform.engine.core.command.CommonCommandLoader
+import io.github.architectplatform.engine.core.command.CommandRegistry
 import io.github.architectplatform.engine.core.context.application.ContextLoader
 import io.github.architectplatform.engine.core.plugin.application.PluginLoader
 import io.github.architectplatform.engine.core.project.application.domain.Project
@@ -11,8 +11,8 @@ import jakarta.inject.Singleton
 @Singleton
 class ProjectService(
 	private val projectRepository: ProjectRepository,
+	private val commandRegistry: CommandRegistry,
 	private val contextLoader: ContextLoader,
-	private val commonCommandLoader: CommonCommandLoader,
 	private val pluginLoader: PluginLoader,
 ) {
 
@@ -22,10 +22,11 @@ class ProjectService(
 	fun loadProject(project: Project) {
 		println("Loading project ${project.name}...")
 		project.context = contextLoader.getContext(project.path)
-		project.commands = commonCommandLoader.getCommands()
+		project.commands = commandRegistry.getAllCommands().associateBy { it.name }
 		project.plugins = pluginLoader.load(project.context)
 		projectRepository.save(project.name, project)
 	}
+
 
 	fun getProject(name: String): Project? {
 		if (!cacheEnabled) {

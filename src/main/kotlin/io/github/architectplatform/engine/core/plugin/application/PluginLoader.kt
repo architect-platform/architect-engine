@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.context.Context
 import io.github.architectplatform.api.plugins.Plugin
+import io.github.architectplatform.engine.core.command.CommandRegistry
 import io.github.architectplatform.engine.core.project.application.ProjectDefinition
 import jakarta.inject.Singleton
 import java.net.URLClassLoader
@@ -13,6 +14,7 @@ import java.util.*
 @Singleton
 class PluginLoader(
 	private val pluginDownloader: PluginDownloader,
+	private val commandsRegistry: CommandRegistry,
 ) {
 
 	private val objectMapper = ObjectMapper().registerKotlinModule()
@@ -32,6 +34,10 @@ class PluginLoader(
 				println("Found plugin: ${loadedPlugin.name}")
 				loadedPlugin.initialize(context)
 				plugins[loadedPlugin.name] = loadedPlugin
+				loadedPlugin.getCommands().forEach { command ->
+					println("Registering command: ${command.name}")
+					commandsRegistry.registerCommand(command)
+				}
 			}
 		}
 		println("Loaded ${plugins.size} plugins.")
