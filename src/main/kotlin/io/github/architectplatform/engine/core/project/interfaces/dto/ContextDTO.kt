@@ -2,8 +2,8 @@ package io.github.architectplatform.engine.core.project.interfaces.dto
 
 import io.github.architectplatform.api.context.Context
 
-typealias ContextDTO = Map<String, Any>
+typealias ContextDTO = Context
 
-fun Context.toApiDTO(): ContextDTO {
+fun Context.toDTO(): ContextDTO {
 	return this
 }

@@ -4,15 +4,15 @@ import io.github.architectplatform.api.command.Command
 import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
-data class ApiCommandDTO(
+data class CommandDTO(
 	val name: String,
 	val description: String,
 	val usage: String,
-	val subcommands: List<ApiCommandDTO> = emptyList()
+	val subcommands: List<CommandDTO> = emptyList()
 )
 
-fun Command<*>.toApiDTO(): ApiCommandDTO {
-	return ApiCommandDTO(
+fun Command<*>.toDTO(): CommandDTO {
+	return CommandDTO(
 		name = name,
 		description = description,
 		usage = usage,

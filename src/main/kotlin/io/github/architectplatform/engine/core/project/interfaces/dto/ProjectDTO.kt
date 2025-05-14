@@ -4,13 +4,13 @@ import io.github.architectplatform.engine.core.project.application.domain.Projec
 import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
-data class ApiProjectDTO(
+data class ProjectDTO(
 	val name: String,
 	val path: String,
 )
 
-fun Project.toApiDTO(): ApiProjectDTO {
-	return ApiProjectDTO(
+fun Project.toDTO(): ProjectDTO {
+	return ProjectDTO(
 		name = name,
 		path = path,
 	)

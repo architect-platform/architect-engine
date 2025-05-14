@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.commons.phases.application.commitmsg
+package io.github.architectplatform.engine.commons.phases.commitmsg
 
 import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest

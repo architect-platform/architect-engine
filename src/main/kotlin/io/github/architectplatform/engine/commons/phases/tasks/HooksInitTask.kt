@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.commons.phases.infra
+package io.github.architectplatform.engine.commons.phases.tasks
 
 import io.github.architectplatform.api.tasks.init.InitTask
 import io.github.architectplatform.api.tasks.init.InitTaskResult

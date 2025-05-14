@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.commons.phases.application.prepush
+package io.github.architectplatform.engine.commons.phases.prepush
 
 import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest

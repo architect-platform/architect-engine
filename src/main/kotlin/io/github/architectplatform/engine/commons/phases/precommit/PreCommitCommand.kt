@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.commons.phases.application.precommit
+package io.github.architectplatform.engine.commons.phases.precommit
 
 import io.github.architectplatform.api.command.AbstractCommand
 import io.github.architectplatform.api.command.CommandRequest
