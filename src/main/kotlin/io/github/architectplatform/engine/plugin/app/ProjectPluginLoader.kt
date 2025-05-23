@@ -1,8 +1,8 @@
 package io.github.architectplatform.engine.plugin.app
 
-import io.github.architectplatform.api.context.getKey
 import io.github.architectplatform.api.plugins.ArchitectPlugin
 import io.github.architectplatform.api.project.ProjectContext
+import io.github.architectplatform.api.project.getKey
 import java.net.URLClassLoader
 
 class ProjectPluginLoader(
