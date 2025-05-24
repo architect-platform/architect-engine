@@ -7,6 +7,6 @@ class Project(
 	val name: String,
 	val path: String,
 	val context: ProjectContext,
-	val plugins: List<ArchitectPlugin>,
+	val plugins: List<ArchitectPlugin<*>>,
 )
 

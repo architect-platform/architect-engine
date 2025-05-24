@@ -8,11 +8,11 @@ import jakarta.inject.Singleton
 class PluginLoaderFactory {
 	@Singleton
 	fun loader(
-		downloader: io.github.architectplatform.engine.core.plugin.app.PluginDownloader,
-		internalPlugins: List<ArchitectPlugin> = emptyList(),
-	): io.github.architectplatform.engine.core.plugin.app.PluginLoader =
-		io.github.architectplatform.engine.core.plugin.app.ProjectPluginLoader(
-			io.github.architectplatform.engine.core.plugin.app.SpiPluginLoader(),
+		downloader: PluginDownloader,
+		internalPlugins: List<ArchitectPlugin<*>> = emptyList(),
+	): PluginLoader =
+		ProjectPluginLoader(
+			SpiPluginLoader(),
 			downloader,
 			internalPlugins
 		)

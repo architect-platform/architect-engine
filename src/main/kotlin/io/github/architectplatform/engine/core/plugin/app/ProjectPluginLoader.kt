@@ -6,13 +6,13 @@ import io.github.architectplatform.api.project.getKey
 import java.net.URLClassLoader
 
 class ProjectPluginLoader(
-	private val spiLoader: io.github.architectplatform.engine.core.plugin.app.SpiPluginLoader,
-	private val downloader: io.github.architectplatform.engine.core.plugin.app.PluginDownloader,
-	private val internalPlugins: List<ArchitectPlugin>,
-) : io.github.architectplatform.engine.core.plugin.app.PluginLoader {
+	private val spiLoader: SpiPluginLoader,
+	private val downloader: PluginDownloader,
+	private val internalPlugins: List<ArchitectPlugin<*>>,
+) : PluginLoader {
 
-	override fun load(context: ProjectContext): List<ArchitectPlugin> {
-		val enabled = mutableListOf<ArchitectPlugin>()
+	override fun load(context: ProjectContext): List<ArchitectPlugin<*>> {
+		val enabled = mutableListOf<ArchitectPlugin<*>>()
 		// 1) Always include CorePlugin
 		enabled += internalPlugins
 

@@ -1,12 +1,9 @@
 package io.github.architectplatform.engine.installers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.execution.CommandExecutor
 import io.github.architectplatform.api.phase.SimpleTask
 import io.github.architectplatform.api.plugins.ArchitectPlugin
 import io.github.architectplatform.api.project.ProjectContext
-import io.github.architectplatform.api.project.getKey
 import io.github.architectplatform.api.tasks.TaskRegistry
 import io.github.architectplatform.api.tasks.TaskResult
 import io.github.architectplatform.api.workflows.core.CoreWorkflow
@@ -16,8 +13,11 @@ import java.io.File
 import java.nio.file.Paths
 
 @Singleton
-class InstallersPlugin : ArchitectPlugin {
+class InstallersPlugin : ArchitectPlugin<InstallersContext> {
 	override val id: String = "installers-plugin"
+	override val contextKey: String = "installers"
+	override val ctxClass: Class<InstallersContext> = InstallersContext::class.java
+	override lateinit var context: InstallersContext
 
 	override fun register(registry: TaskRegistry) {
 		registry.add(
@@ -29,35 +29,19 @@ class InstallersPlugin : ArchitectPlugin {
 		)
 	}
 
-	data class InstallersContext(
-		val owner: String,
-		val name: String,
-		val applicationName: String,
-		val assetType: String,
-	)
-
-	private fun copyInstallers(context: ProjectContext): TaskResult {
-		val installersContextMap = context.config.getKey<Map<String, Any>>("installers")
-			?: return TaskResult.success("Installers context not found in config, skipping...")
-		println("Installers context map: $installersContextMap")
-		val objectMapper = ObjectMapper().registerKotlinModule()
-		val installersContext = objectMapper.convertValue(
-			installersContextMap,
-			InstallersContext::class.java
-		)
-
-		val installersDir = Paths.get(context.dir.toString(), ".installers")
+	private fun copyInstallers(projectContext: ProjectContext): TaskResult {
+		val installersDir = Paths.get(projectContext.dir.toString(), ".installers")
 		val resourceRoot = "installers"
-		val resourceExtractor = context.service(ResourceExtractor::class.java)
-		val commandExecutor = context.service(CommandExecutor::class.java)
+		val resourceExtractor = projectContext.service(ResourceExtractor::class.java)
+		val commandExecutor = projectContext.service(CommandExecutor::class.java)
 		resourceExtractor.copyDirectoryFromResources(resourceRoot, installersDir)
 		File(installersDir.toString()).listFiles()?.forEach { file ->
 			val content = file.readText()
 			val replacedContent = content
-				.replace("{{owner}}", installersContext.owner)
-				.replace("{{name}}", installersContext.name)
-				.replace("{{applicationName}}", installersContext.applicationName)
-				.replace("{{assetType}}", installersContext.assetType)
+				.replace("{{owner}}", context.owner)
+				.replace("{{name}}", context.name)
+				.replace("{{applicationName}}", context.applicationName)
+				.replace("{{assetType}}", context.assetType)
 			file.writeText(replacedContent)
 			commandExecutor.execute("chmod +x ${file.path}")
 		}
