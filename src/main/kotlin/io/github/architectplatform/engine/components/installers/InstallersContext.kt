@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.installers
+package io.github.architectplatform.engine.components.installers
 
 data class InstallersContext(
 	val owner: String,

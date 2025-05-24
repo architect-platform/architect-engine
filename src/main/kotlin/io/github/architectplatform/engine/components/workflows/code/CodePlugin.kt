@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.workflows.code
+package io.github.architectplatform.engine.components.workflows.code
 
 import io.github.architectplatform.api.plugins.WorkflowPlugin
 import io.github.architectplatform.api.workflows.code.CodeWorkflow

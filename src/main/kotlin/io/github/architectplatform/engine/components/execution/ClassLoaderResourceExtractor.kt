@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.execution
+package io.github.architectplatform.engine.components.execution
 
 import io.github.architectplatform.api.execution.ResourceExtractor
 import jakarta.inject.Singleton

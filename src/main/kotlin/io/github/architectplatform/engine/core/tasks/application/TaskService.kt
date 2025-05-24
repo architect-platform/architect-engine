@@ -22,10 +22,10 @@ class TaskService(
 		return taskRegistry.all().firstOrNull { it.id == taskId }
 	}
 
-	fun executeTask(taskId: String, projectName: String): TaskResult {
+	fun executeTask(taskId: String, projectName: String, args: List<String>): TaskResult {
 		val project = projectService.getProject(projectName) ?: throw IllegalArgumentException("Project not found")
 		val task = getTaskById(taskId) ?: throw IllegalArgumentException("Task not found")
-		return task.execute(project.context)
+		return task.execute(project.context, args)
 	}
 
 

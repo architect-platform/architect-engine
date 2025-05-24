@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.workflows.hooks.tasks
+package io.github.architectplatform.engine.components.workflows.hooks.tasks
 
 import io.github.architectplatform.api.execution.CommandExecutor
 import io.github.architectplatform.api.execution.ResourceExtractor
@@ -13,7 +13,7 @@ class HooksInstallTask : Task {
 	override fun phase(): Phase = CoreWorkflow.INIT
 	override val id: String = "hooks-install"
 
-	override fun execute(ctx: ProjectContext): TaskResult {
+	override fun execute(ctx: ProjectContext, args: List<String>): TaskResult {
 		println("Installing hooks...")
 		val resourceRoot = "hooks"
 		val projectPath = ctx.dir

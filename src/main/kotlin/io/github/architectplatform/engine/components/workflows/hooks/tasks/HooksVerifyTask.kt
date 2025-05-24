@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.workflows.hooks.tasks
+package io.github.architectplatform.engine.components.workflows.hooks.tasks
 
 import io.github.architectplatform.api.phase.Phase
 import io.github.architectplatform.api.project.ProjectContext
@@ -13,7 +13,7 @@ class HooksVerifyTask : Task {
 	override fun phase(): Phase = CoreWorkflow.VERIFY
 	override val id: String = "hooks-verify"
 
-	override fun execute(ctx: ProjectContext): TaskResult {
+	override fun execute(ctx: ProjectContext, args: List<String>): TaskResult {
 		println("Verifying hooks...")
 		val projectPath = ctx.dir
 		val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()

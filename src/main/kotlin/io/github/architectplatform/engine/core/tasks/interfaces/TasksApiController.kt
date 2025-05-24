@@ -4,6 +4,7 @@ import io.github.architectplatform.engine.core.tasks.application.TaskService
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.TaskDTO
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.TaskResultDTO
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.toDTO
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable
@@ -34,9 +35,10 @@ class TasksApiController(
 	fun executeTask(
 		@PathVariable projectName: String,
 		@PathVariable taskName: String,
+		@Body args: List<String> = emptyList(),
 	): TaskResultDTO {
 		println("Executing task: $taskName for project: $projectName")
-		val result = taskService.executeTask(taskName, projectName)
+		val result = taskService.executeTask(taskName, projectName, args)
 		return result.toDTO().also { println("Task executed: $it") }
 	}
 

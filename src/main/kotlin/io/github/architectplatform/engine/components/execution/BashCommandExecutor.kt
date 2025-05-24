@@ -1,9 +1,8 @@
-package io.github.architectplatform.engine.execution
+package io.github.architectplatform.engine.components.execution
 
 import io.github.architectplatform.api.execution.CommandExecutor
 import jakarta.inject.Singleton
 import java.io.File
-import kotlin.system.exitProcess
 
 @Singleton
 open class BashCommandExecutor : CommandExecutor {
@@ -41,7 +40,7 @@ open class BashCommandExecutor : CommandExecutor {
 			println("❌ Failed (exit code: $exitCode)")
 			println("Output:")
 			println(result)
-			exitProcess(-1)
+			throw RuntimeException("ExitCode: $exitCode, Result: $result")
 		}
 	}
 }
