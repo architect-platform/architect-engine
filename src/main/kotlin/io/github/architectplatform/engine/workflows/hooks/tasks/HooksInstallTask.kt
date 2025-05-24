@@ -6,7 +6,7 @@ import io.github.architectplatform.api.project.ProjectContext
 import io.github.architectplatform.api.tasks.Task
 import io.github.architectplatform.api.tasks.TaskResult
 import io.github.architectplatform.api.workflows.core.CoreWorkflow
-import io.github.architectplatform.engine.utils.ResourceExtractor
+import io.github.architectplatform.engine.execution.ResourceExtractor
 import java.nio.file.Paths
 
 class HooksInstallTask : Task {
