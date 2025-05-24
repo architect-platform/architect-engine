@@ -1,12 +1,12 @@
 package io.github.architectplatform.engine.workflows.hooks.tasks
 
 import io.github.architectplatform.api.execution.CommandExecutor
+import io.github.architectplatform.api.execution.ResourceExtractor
 import io.github.architectplatform.api.phase.Phase
 import io.github.architectplatform.api.project.ProjectContext
 import io.github.architectplatform.api.tasks.Task
 import io.github.architectplatform.api.tasks.TaskResult
 import io.github.architectplatform.api.workflows.core.CoreWorkflow
-import io.github.architectplatform.engine.execution.ResourceExtractor
 import java.nio.file.Paths
 
 class HooksInstallTask : Task {

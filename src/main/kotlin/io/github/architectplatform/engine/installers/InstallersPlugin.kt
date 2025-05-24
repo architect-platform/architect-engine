@@ -1,13 +1,13 @@
 package io.github.architectplatform.engine.installers
 
 import io.github.architectplatform.api.execution.CommandExecutor
+import io.github.architectplatform.api.execution.ResourceExtractor
 import io.github.architectplatform.api.phase.SimpleTask
 import io.github.architectplatform.api.plugins.ArchitectPlugin
 import io.github.architectplatform.api.project.ProjectContext
 import io.github.architectplatform.api.tasks.TaskRegistry
 import io.github.architectplatform.api.tasks.TaskResult
 import io.github.architectplatform.api.workflows.core.CoreWorkflow
-import io.github.architectplatform.engine.execution.ResourceExtractor
 import jakarta.inject.Singleton
 import java.io.File
 import java.nio.file.Paths

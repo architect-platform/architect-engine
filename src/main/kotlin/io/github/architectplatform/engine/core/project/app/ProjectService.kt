@@ -3,10 +3,10 @@ package io.github.architectplatform.engine.core.project.app
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.execution.CommandExecutor
+import io.github.architectplatform.api.execution.ResourceExtractor
 import io.github.architectplatform.api.tasks.TaskRegistry
 import io.github.architectplatform.engine.core.project.app.repositories.ProjectRepository
 import io.github.architectplatform.engine.core.project.domain.Project
-import io.github.architectplatform.engine.execution.ResourceExtractor
 import io.micronaut.context.annotation.Property
 import jakarta.inject.Singleton
 import java.util.concurrent.ConcurrentHashMap

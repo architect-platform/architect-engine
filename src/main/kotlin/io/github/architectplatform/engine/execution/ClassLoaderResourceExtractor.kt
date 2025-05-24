@@ -1,5 +1,6 @@
 package io.github.architectplatform.engine.execution
 
+import io.github.architectplatform.api.execution.ResourceExtractor
 import jakarta.inject.Singleton
 import java.io.InputStream
 import java.net.JarURLConnection
@@ -10,11 +11,11 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 @Singleton
-class ResourceExtractor {
+class ClassLoaderResourceExtractor : ResourceExtractor {
 
 	private val classLoader = Thread.currentThread().contextClassLoader
 
-	fun copyFileFromResources(resourcePath: String, targetDir: Path, targetFileName: String? = null) {
+	override fun copyFileFromResources(resourcePath: String, targetDir: Path, targetFileName: String?) {
 		val inputStream = classLoader.getResourceAsStream(resourcePath)
 			?: throw IllegalArgumentException("Resource file not found: $resourcePath")
 
@@ -31,7 +32,7 @@ class ResourceExtractor {
 		}
 	}
 
-	fun copyDirectoryFromResources(resourceRoot: String, targetDirectory: Path) {
+	override fun copyDirectoryFromResources(resourceRoot: String, targetDirectory: Path) {
 		val resourceUrl: URL = classLoader.getResource(resourceRoot)
 			?: throw IllegalStateException("Resource path $resourceRoot not found")
 
@@ -64,13 +65,13 @@ class ResourceExtractor {
 		}
 	}
 
-	fun getResourceFileContent(resourcePath: String): String {
+	override fun getResourceFileContent(resourcePath: String): String {
 		val inputStream = classLoader.getResourceAsStream(resourcePath)
 			?: throw IllegalArgumentException("Resource file not found: $resourcePath")
 		return inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
 	}
 
-	fun listResourceFiles(resourceRoot: String): List<String> {
+	override fun listResourceFiles(resourceRoot: String): List<String> {
 		val resourceUrl: URL = classLoader.getResource(resourceRoot)
 			?: throw IllegalStateException("Resource path $resourceRoot not found")
 
