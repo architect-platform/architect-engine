@@ -20,8 +20,8 @@ class HooksInstallTask : Task {
 		val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()
 		val resourceExtractor = ctx.service(ResourceExtractor::class.java)
 		val commandExecutor = ctx.service(CommandExecutor::class.java)
-		resourceExtractor.copyDirectoryFromResources(resourceRoot, hooksDir)
-		resourceExtractor.listResourceFiles(resourceRoot).forEach { file ->
+		resourceExtractor.copyDirectoryFromResources(this.javaClass.classLoader, resourceRoot, hooksDir)
+		resourceExtractor.listResourceFiles(this.javaClass.classLoader, resourceRoot).forEach { file ->
 			val fileName = file.substringAfterLast("/")
 			commandExecutor.execute("chmod +x $hooksDir/$fileName")
 		}

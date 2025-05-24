@@ -23,6 +23,7 @@ class ProjectPluginLoader(
 			enabled += spiLoader.loadFrom(loader)
 		}
 
+
 		return enabled
 	}
 }

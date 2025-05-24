@@ -34,7 +34,7 @@ class InstallersPlugin : ArchitectPlugin<InstallersContext> {
 		val resourceRoot = "installers"
 		val resourceExtractor = projectContext.service(ResourceExtractor::class.java)
 		val commandExecutor = projectContext.service(CommandExecutor::class.java)
-		resourceExtractor.copyDirectoryFromResources(resourceRoot, installersDir)
+		resourceExtractor.copyDirectoryFromResources(this.javaClass.classLoader, resourceRoot, installersDir)
 		File(installersDir.toString()).listFiles()?.forEach { file ->
 			val content = file.readText()
 			val replacedContent = content

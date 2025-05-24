@@ -13,9 +13,12 @@ import java.nio.file.StandardCopyOption
 @Singleton
 class ClassLoaderResourceExtractor : ResourceExtractor {
 
-	private val classLoader = Thread.currentThread().contextClassLoader
-
-	override fun copyFileFromResources(resourcePath: String, targetDir: Path, targetFileName: String?) {
+	override fun copyFileFromResources(
+		classLoader: ClassLoader,
+		resourcePath: String,
+		targetDir: Path,
+		targetFileName: String?,
+	) {
 		val inputStream = classLoader.getResourceAsStream(resourcePath)
 			?: throw IllegalArgumentException("Resource file not found: $resourcePath")
 
@@ -32,7 +35,7 @@ class ClassLoaderResourceExtractor : ResourceExtractor {
 		}
 	}
 
-	override fun copyDirectoryFromResources(resourceRoot: String, targetDirectory: Path) {
+	override fun copyDirectoryFromResources(classLoader: ClassLoader, resourceRoot: String, targetDirectory: Path) {
 		val resourceUrl: URL = classLoader.getResource(resourceRoot)
 			?: throw IllegalStateException("Resource path $resourceRoot not found")
 
@@ -65,13 +68,13 @@ class ClassLoaderResourceExtractor : ResourceExtractor {
 		}
 	}
 
-	override fun getResourceFileContent(resourcePath: String): String {
+	override fun getResourceFileContent(classLoader: ClassLoader, resourcePath: String): String {
 		val inputStream = classLoader.getResourceAsStream(resourcePath)
 			?: throw IllegalArgumentException("Resource file not found: $resourcePath")
 		return inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
 	}
 
-	override fun listResourceFiles(resourceRoot: String): List<String> {
+	override fun listResourceFiles(classLoader: ClassLoader, resourceRoot: String): List<String> {
 		val resourceUrl: URL = classLoader.getResource(resourceRoot)
 			?: throw IllegalStateException("Resource path $resourceRoot not found")
 
