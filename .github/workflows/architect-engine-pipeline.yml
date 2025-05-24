@@ -12,6 +12,7 @@ on:
 
 env:
   REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -60,6 +61,8 @@ jobs:
 
       - name: Release
         run: architect release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      - name: Publish
+        run: architect publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
