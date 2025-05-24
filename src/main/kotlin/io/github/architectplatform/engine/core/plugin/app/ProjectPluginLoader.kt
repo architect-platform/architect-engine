@@ -20,7 +20,9 @@ class ProjectPluginLoader(
 		context.config.getKey<List<String>>("plugins")?.forEach { url ->
 			val jar = downloader.download(url)
 			val loader = URLClassLoader(arrayOf(jar.toURI().toURL()), this::class.java.classLoader)
-			enabled += spiLoader.loadFrom(loader)
+			val loaded = spiLoader.loadFrom(loader)
+			println("Loaded plugins from $url: ${loaded.size} plugins")
+			enabled += loaded
 		}
 
 

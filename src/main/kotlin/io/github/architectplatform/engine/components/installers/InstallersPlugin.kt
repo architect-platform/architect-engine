@@ -2,12 +2,12 @@ package io.github.architectplatform.engine.components.installers
 
 import io.github.architectplatform.api.components.execution.CommandExecutor
 import io.github.architectplatform.api.components.execution.ResourceExtractor
+import io.github.architectplatform.api.components.workflows.core.CoreWorkflow
 import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.api.core.tasks.impl.SimpleTask
-import io.github.architectplatform.api.components.workflows.core.CoreWorkflow
 import jakarta.inject.Singleton
 import java.io.File
 import java.nio.file.Paths
@@ -17,7 +17,7 @@ class InstallersPlugin : ArchitectPlugin<InstallersContext> {
 	override val id: String = "installers-plugin"
 	override val contextKey: String = "installers"
 	override val ctxClass: Class<InstallersContext> = InstallersContext::class.java
-	override lateinit var context: InstallersContext
+	override var context: InstallersContext = InstallersContext()
 
 	override fun register(registry: TaskRegistry) {
 		registry.add(
@@ -30,6 +30,9 @@ class InstallersPlugin : ArchitectPlugin<InstallersContext> {
 	}
 
 	private fun copyInstallers(projectContext: ProjectContext): TaskResult {
+		if (context.enabled.not()) {
+			return TaskResult.success("Installers are not enabled, skipping copy.")
+		}
 		val installersDir = Paths.get(projectContext.dir.toString(), ".installers")
 		val resourceRoot = "installers"
 		val resourceExtractor = projectContext.service(ResourceExtractor::class.java)

@@ -2,12 +2,12 @@ package io.github.architectplatform.engine.components.commits
 
 import io.github.architectplatform.api.components.execution.CommandExecutor
 import io.github.architectplatform.api.components.execution.ResourceExtractor
+import io.github.architectplatform.api.components.workflows.hooks.HooksWorkflow
 import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.api.core.tasks.impl.TaskWithArgs
-import io.github.architectplatform.api.components.workflows.hooks.HooksWorkflow
 import jakarta.inject.Singleton
 
 @Singleton
@@ -15,7 +15,7 @@ class CommitsPlugin : ArchitectPlugin<CommitsContext> {
 	override val id: String = "commits-plugin"
 	override val contextKey: String = "commits"
 	override val ctxClass: Class<CommitsContext> = CommitsContext::class.java
-	override lateinit var context: CommitsContext
+	override var context: CommitsContext = CommitsContext()
 
 	override fun register(registry: TaskRegistry) {
 		registry.add(
