@@ -1,4 +1,0 @@
-release:
-  assets:
-    - name: architect-engine.jar
-      path: "build/libs/architect-engine-*-all.jar"

@@ -1,0 +1,11 @@
+deps:
+  type: renovate
+
+pipeline:
+  name: architect-engine-pipeline
+  type: github/classic-java-17
+
+release:
+  assets:
+    - name: architect-engine.jar
+      path: "build/libs/architect-engine-*-all.jar"

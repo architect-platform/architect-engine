@@ -2,4 +2,7 @@ project:
   name: architect-engine
   description: "The Architect Engine"
 
+plugins:
+  - https://github.com/architect-platform/gradle-architected/releases/download/v1.6.2/gradle-architected.jar
+  - https://github.com/architect-platform/github-architected/releases/download/v1.2.4/github-architected.jar
 
