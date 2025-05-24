@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.app
 
-import io.github.architectplatform.api.project.Config
+import io.github.architectplatform.api.core.project.Config
 import io.github.architectplatform.engine.core.project.app.ports.ConfigParser
 import jakarta.inject.Singleton
 import java.io.File

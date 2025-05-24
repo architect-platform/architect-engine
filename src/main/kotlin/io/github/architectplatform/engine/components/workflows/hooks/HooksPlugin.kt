@@ -1,8 +1,8 @@
 package io.github.architectplatform.engine.components.workflows.hooks
 
-import io.github.architectplatform.api.plugins.WorkflowPlugin
-import io.github.architectplatform.api.tasks.TaskRegistry
-import io.github.architectplatform.api.workflows.hooks.HooksWorkflow
+import io.github.architectplatform.api.core.plugins.WorkflowPlugin
+import io.github.architectplatform.api.core.tasks.TaskRegistry
+import io.github.architectplatform.api.components.workflows.hooks.HooksWorkflow
 import io.github.architectplatform.engine.components.workflows.hooks.tasks.HooksInstallTask
 import io.github.architectplatform.engine.components.workflows.hooks.tasks.HooksVerifyTask
 import jakarta.inject.Singleton

@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.interfaces.dto
 
-import io.github.architectplatform.api.project.ProjectContext
+import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.engine.core.project.domain.Project
 import io.micronaut.serde.annotation.Serdeable
 

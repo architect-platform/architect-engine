@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-	implementation("io.github.architectplatform:architect-api:1.13.0")
+	implementation("io.github.architectplatform:architect-api:1.14.0")
 	ksp("io.micronaut:micronaut-http-validation")
 	ksp("io.micronaut.serde:micronaut-serde-processor")
 	implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")

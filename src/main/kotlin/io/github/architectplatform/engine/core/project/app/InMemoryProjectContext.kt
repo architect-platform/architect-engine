@@ -1,7 +1,7 @@
 package io.github.architectplatform.engine.core.project.app
 
-import io.github.architectplatform.api.project.Config
-import io.github.architectplatform.api.project.ProjectContext
+import io.github.architectplatform.api.core.project.Config
+import io.github.architectplatform.api.core.project.ProjectContext
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 

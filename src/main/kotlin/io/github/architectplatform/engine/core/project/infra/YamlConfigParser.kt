@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.infra
 
-import io.github.architectplatform.api.project.Config
+import io.github.architectplatform.api.core.project.Config
 import io.github.architectplatform.engine.core.project.app.ports.ConfigParser
 import jakarta.inject.Singleton
 import org.yaml.snakeyaml.Yaml

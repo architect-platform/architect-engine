@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.interfaces
 
-import io.github.architectplatform.api.project.Config
+import io.github.architectplatform.api.core.project.Config
 import io.github.architectplatform.engine.core.project.app.ProjectService
 import io.github.architectplatform.engine.core.project.domain.Project
 import io.github.architectplatform.engine.core.project.interfaces.dto.ProjectDTO

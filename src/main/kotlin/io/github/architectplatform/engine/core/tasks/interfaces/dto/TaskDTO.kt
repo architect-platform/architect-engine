@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.tasks.interfaces.dto
 
-import io.github.architectplatform.api.tasks.Task
+import io.github.architectplatform.api.core.tasks.Task
 import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable

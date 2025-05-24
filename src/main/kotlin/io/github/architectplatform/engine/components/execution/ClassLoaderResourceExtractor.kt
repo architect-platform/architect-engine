@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.components.execution
 
-import io.github.architectplatform.api.execution.ResourceExtractor
+import io.github.architectplatform.api.components.execution.ResourceExtractor
 import jakarta.inject.Singleton
 import java.io.InputStream
 import java.net.JarURLConnection

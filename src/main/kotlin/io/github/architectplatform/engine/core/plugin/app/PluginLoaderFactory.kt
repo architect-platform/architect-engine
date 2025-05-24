@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.plugin.app
 
-import io.github.architectplatform.api.plugins.ArchitectPlugin
+import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.micronaut.context.annotation.Factory
 import jakarta.inject.Singleton
 

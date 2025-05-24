@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.components.execution
 
-import io.github.architectplatform.api.execution.CommandExecutor
+import io.github.architectplatform.api.components.execution.CommandExecutor
 import jakarta.inject.Singleton
 import java.io.File
 

@@ -1,6 +1,6 @@
 package io.github.architectplatform.engine.core.project.domain
 
-import io.github.architectplatform.api.project.ProjectContext
+import io.github.architectplatform.api.core.project.ProjectContext
 import jakarta.inject.Singleton
 
 @Singleton

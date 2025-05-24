@@ -1,13 +1,13 @@
 package io.github.architectplatform.engine.components.commits
 
-import io.github.architectplatform.api.execution.CommandExecutor
-import io.github.architectplatform.api.execution.ResourceExtractor
-import io.github.architectplatform.api.plugins.ArchitectPlugin
-import io.github.architectplatform.api.project.ProjectContext
-import io.github.architectplatform.api.tasks.TaskRegistry
-import io.github.architectplatform.api.tasks.TaskResult
-import io.github.architectplatform.api.tasks.impl.TaskWithArgs
-import io.github.architectplatform.api.workflows.hooks.HooksWorkflow
+import io.github.architectplatform.api.components.execution.CommandExecutor
+import io.github.architectplatform.api.components.execution.ResourceExtractor
+import io.github.architectplatform.api.core.plugins.ArchitectPlugin
+import io.github.architectplatform.api.core.project.ProjectContext
+import io.github.architectplatform.api.core.tasks.TaskRegistry
+import io.github.architectplatform.api.core.tasks.TaskResult
+import io.github.architectplatform.api.core.tasks.impl.TaskWithArgs
+import io.github.architectplatform.api.components.workflows.hooks.HooksWorkflow
 import jakarta.inject.Singleton
 
 @Singleton

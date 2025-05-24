@@ -1,8 +1,8 @@
 package io.github.architectplatform.engine.core.tasks.application
 
-import io.github.architectplatform.api.tasks.Task
-import io.github.architectplatform.api.tasks.TaskRegistry
-import io.github.architectplatform.api.tasks.TaskResult
+import io.github.architectplatform.api.core.tasks.Task
+import io.github.architectplatform.api.core.tasks.TaskRegistry
+import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.engine.core.project.app.ProjectService
 import jakarta.inject.Singleton
 
