@@ -47,7 +47,7 @@ jobs:
 
       - name: Set up Architect Engine
         run: |
-          architect engine install
+          curl -sSL https://raw.githubusercontent.com/architect-platform/architect-engine/main/.installers/bash-ci | bash
           architect engine start
 
       - name: Init
