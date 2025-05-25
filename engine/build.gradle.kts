@@ -36,6 +36,8 @@ dependencies {
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	compileOnly("io.micronaut:micronaut-http-client")
+	implementation("io.micronaut:micronaut-runtime")
+	runtimeOnly("io.micronaut:micronaut-http-client")
 	runtimeOnly("ch.qos.logback:logback-classic")
 	runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 	runtimeOnly("org.yaml:snakeyaml")
