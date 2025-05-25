@@ -30,10 +30,11 @@ class CachedPluginDownloader(
 			return target
 		}
 		println("Downloading plugin from $url...")
-		val response = httpClient.toBlocking().retrieve(HttpRequest.GET<String>(url))
-		Files.write(target.toPath(), response.toByteArray())
+		val request = HttpRequest.GET<Any>(url)
+		val response = httpClient.toBlocking().exchange(request, ByteArray::class.java)
+		val body = response.body() ?: error("Failed to download plugin: empty response body")
+		Files.write(target.toPath(), body)
 		println("Plugin downloaded to ${target.absolutePath}")
-		target.setExecutable(true)
 		return target
 	}
 }
