@@ -1,4 +1,4 @@
 gradle:
   projects:
     - name: architect-engine
-      path: .
+      path: engine
