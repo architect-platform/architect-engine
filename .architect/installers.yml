@@ -1,4 +1,5 @@
 installers:
+  enabled: true
   owner: architect-platform
   name: architect-engine
   assetType: jar
