@@ -4,7 +4,6 @@ micronaut:
   server:
     port: 9292
 
-architect:
   engine:
     project:
       cache:

@@ -2,14 +2,20 @@ package io.github.architectplatform.engine.core.plugin.infra
 
 import io.github.architectplatform.engine.core.plugin.app.PluginDownloader
 import io.micronaut.context.annotation.Property
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.client.HttpClient
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
 import java.io.File
-import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 
 @Singleton
-class CachedPluginDownloader : io.github.architectplatform.engine.core.plugin.app.PluginDownloader {
+@ExecuteOn(TaskExecutors.BLOCKING)
+class CachedPluginDownloader(
+	private val httpClient: HttpClient
+) : PluginDownloader {
 	private val cache = Paths.get(System.getProperty("user.home"), ".architect-engine", "plugins")
 		.also { Files.createDirectories(it) }
 
@@ -24,9 +30,10 @@ class CachedPluginDownloader : io.github.architectplatform.engine.core.plugin.ap
 			return target
 		}
 		println("Downloading plugin from $url...")
-		URL(url).openStream().use { inp ->
-			target.outputStream().use { out -> inp.copyTo(out) }
-		}
+		val response = httpClient.toBlocking().retrieve(HttpRequest.GET<String>(url))
+		Files.write(target.toPath(), response.toByteArray())
+		println("Plugin downloaded to ${target.absolutePath}")
+		target.setExecutable(true)
 		return target
 	}
 }
