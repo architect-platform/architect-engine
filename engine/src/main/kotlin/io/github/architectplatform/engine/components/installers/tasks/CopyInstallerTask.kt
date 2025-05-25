@@ -17,6 +17,9 @@ class CopyInstallerTask(private val installersContext: InstallersContext) : Task
 	override fun phase(): Phase = CoreWorkflow.INIT
 
 	override fun execute(ctx: ProjectContext, args: List<String>): TaskResult {
+		if (!installersContext.enabled)	 {
+			return TaskResult.success("Installers are not enabled, skipping copy task.")
+		}
 		val installersDir = Paths.get(ctx.dir.toString(), ".installers")
 		val resourceRoot = "installers"
 		val resourceExtractor = ctx.service(ResourceExtractor::class.java)
