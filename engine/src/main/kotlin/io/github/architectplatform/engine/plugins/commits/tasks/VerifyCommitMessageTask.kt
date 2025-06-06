@@ -10,33 +10,34 @@ import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.engine.plugins.commits.context.CommitsContext
 
 class VerifyCommitMessageTask(
-	private val context: CommitsContext,
+    private val context: CommitsContext,
 ) : Task {
-	override val id: String = "verify-commit-message-task"
-	override fun phase(): HooksWorkflow = HooksWorkflow.COMMIT_MSG
+  override val id: String = "verify-commit-message-task"
 
-	override fun execute(environment: Environment, projectContext: ProjectContext, args: List<String>): TaskResult {
-		val commitMessage = args.getOrNull(0) ?: return TaskResult.failure("No commit message provided")
-		println("Verifying commit message: $commitMessage")
-		val convention = this.context.type
-		val filename = "verify.sh"
-		val resourceExtractor = environment.service(ResourceExtractor::class.java)
-		val executor = environment.service(CommandExecutor::class.java)
-		resourceExtractor.copyFileFromResources(
-			this.javaClass.classLoader,
-			"commits/$convention/verify.sh",
-			projectContext.dir,
-			filename
-		)
-		try {
-			executor.execute("./$filename '$commitMessage'", projectContext.dir.toString())
-		} catch (e: Exception) {
-			return TaskResult.failure("Commit message verification failed: ${e.message}")
-		} finally {
-			// Clean up the script file after execution
-			executor.execute("rm -f $filename", projectContext.dir.toString())
-		}
+  override fun phase(): HooksWorkflow = HooksWorkflow.COMMIT_MSG
 
-		return TaskResult.success("Commit message verified successfully")
-	}
+  override fun execute(
+      environment: Environment,
+      projectContext: ProjectContext,
+      args: List<String>
+  ): TaskResult {
+    val commitMessage = args.getOrNull(0) ?: return TaskResult.failure("No commit message provided")
+    println("Verifying commit message: $commitMessage")
+    val convention = this.context.type
+    val filename = "verify.sh"
+    val resourceExtractor = environment.service(ResourceExtractor::class.java)
+    val executor = environment.service(CommandExecutor::class.java)
+    resourceExtractor.copyFileFromResources(
+        this.javaClass.classLoader, "commits/$convention/verify.sh", projectContext.dir, filename)
+    try {
+      executor.execute("./$filename '$commitMessage'", projectContext.dir.toString())
+    } catch (e: Exception) {
+      return TaskResult.failure("Commit message verification failed: ${e.message}")
+    } finally {
+      // Clean up the script file after execution
+      executor.execute("rm -f $filename", projectContext.dir.toString())
+    }
+
+    return TaskResult.success("Commit message verified successfully")
+  }
 }

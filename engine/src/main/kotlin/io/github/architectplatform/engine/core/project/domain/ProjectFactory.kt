@@ -5,12 +5,12 @@ import jakarta.inject.Singleton
 
 @Singleton
 class ProjectFactory {
-	fun createProject(name: String, path: String, projectContext: ProjectContext): Project {
-		return Project(
-			name = name,
-			path = path,
-			context = projectContext,
-			plugins = emptyList(),
-		)
-	}
+  fun createProject(name: String, path: String, projectContext: ProjectContext): Project {
+    return Project(
+        name = name,
+        path = path,
+        context = projectContext,
+        plugins = emptyList(),
+    )
+  }
 }

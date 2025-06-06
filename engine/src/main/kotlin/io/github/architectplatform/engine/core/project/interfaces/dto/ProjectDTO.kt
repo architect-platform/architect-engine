@@ -6,28 +6,28 @@ import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
 data class ProjectDTO(
-	val name: String,
-	val path: String,
-	val context: ProjectContextDTO,
+    val name: String,
+    val path: String,
+    val context: ProjectContextDTO,
 )
 
 @Serdeable
 data class ProjectContextDTO(
-	val dir: String,
-	val config: Map<String, Any>,
+    val dir: String,
+    val config: Map<String, Any>,
 )
 
 fun ProjectContext.toDTO(): ProjectContextDTO {
-	return ProjectContextDTO(
-		dir = dir.toString(),
-		config = config,
-	)
+  return ProjectContextDTO(
+      dir = dir.toString(),
+      config = config,
+  )
 }
 
 fun Project.toDTO(): ProjectDTO {
-	return ProjectDTO(
-		name = name,
-		path = path,
-		context = context.toDTO(),
-	)
+  return ProjectDTO(
+      name = name,
+      path = path,
+      context = context.toDTO(),
+  )
 }

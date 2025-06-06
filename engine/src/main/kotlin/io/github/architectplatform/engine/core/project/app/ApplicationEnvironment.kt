@@ -8,17 +8,16 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Singleton
 class ApplicationEnvironment(
-	commandExecutor: CommandExecutor,
-	resourceExtractor: ResourceExtractor
+    commandExecutor: CommandExecutor,
+    resourceExtractor: ResourceExtractor
 ) : Environment {
-	private val services: ConcurrentHashMap<Class<*>, Any> = ConcurrentHashMap(
-		mapOf(
-			CommandExecutor::class.java to commandExecutor,
-			ResourceExtractor::class.java to resourceExtractor
-		)
-	)
+  private val services: ConcurrentHashMap<Class<*>, Any> =
+      ConcurrentHashMap(
+          mapOf(
+              CommandExecutor::class.java to commandExecutor,
+              ResourceExtractor::class.java to resourceExtractor))
 
-	override fun <T> service(type: Class<T>): T =
-		services[type] as? T
-			?: throw IllegalArgumentException("Service of type ${type.name} not found in environment")
+  override fun <T> service(type: Class<T>): T =
+      services[type] as? T
+          ?: throw IllegalArgumentException("Service of type ${type.name} not found in environment")
 }

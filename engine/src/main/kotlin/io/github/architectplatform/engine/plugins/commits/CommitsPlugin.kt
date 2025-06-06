@@ -8,13 +8,12 @@ import jakarta.inject.Singleton
 
 @Singleton
 class CommitsPlugin : ArchitectPlugin<CommitsContext> {
-	override val id: String = "commits-plugin"
-	override val contextKey: String = "commits"
-	override val ctxClass: Class<CommitsContext> = CommitsContext::class.java
-	override var context: CommitsContext = CommitsContext()
+  override val id: String = "commits-plugin"
+  override val contextKey: String = "commits"
+  override val ctxClass: Class<CommitsContext> = CommitsContext::class.java
+  override var context: CommitsContext = CommitsContext()
 
-	override fun register(registry: TaskRegistry) {
-		registry.add(VerifyCommitMessageTask(context))
-	}
+  override fun register(registry: TaskRegistry) {
+    registry.add(VerifyCommitMessageTask(context))
+  }
 }
-

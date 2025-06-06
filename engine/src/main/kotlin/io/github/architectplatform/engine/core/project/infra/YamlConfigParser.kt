@@ -8,9 +8,9 @@ import org.yaml.snakeyaml.Yaml
 @Singleton
 class YamlConfigParser : ConfigParser {
 
-	private val yaml = Yaml()
+  private val yaml = Yaml()
 
-	override fun parse(context: String): Config {
-		return yaml.load(context) as Map<String, Any>
-	}
+  override fun parse(context: String): Config {
+    return yaml.load(context) as Map<String, Any>
+  }
 }

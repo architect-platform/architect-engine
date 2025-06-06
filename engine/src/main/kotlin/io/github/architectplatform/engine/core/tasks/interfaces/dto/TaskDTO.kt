@@ -5,12 +5,11 @@ import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
 data class TaskDTO(
-	val id: String,
+    val id: String,
 )
 
 fun Task.toDTO(): TaskDTO {
-	return TaskDTO(
-		id = id,
-	)
+  return TaskDTO(
+      id = id,
+  )
 }
-

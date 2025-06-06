@@ -1,47 +1,38 @@
 package io.github.architectplatform.engine.core.execution
 
 import io.github.architectplatform.api.components.execution.CommandExecutor
-import io.github.architectplatform.engine.core.project.app.InternalService
 import jakarta.inject.Singleton
 import java.io.File
 
 @Singleton
 open class BashCommandExecutor : CommandExecutor {
 
-	private fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
-		val processBuilder = ProcessBuilder("sh", "-c", command)
-		if (workingDir != null) {
-			processBuilder.directory(File(workingDir))
-		}
-		processBuilder.redirectErrorStream(true)
-		val process = processBuilder.start()
+  private fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
+    val processBuilder = ProcessBuilder("sh", "-c", command)
+    workingDir?.let { processBuilder.directory(File(it)) }
+    processBuilder.redirectErrorStream(true)
+    val process = processBuilder.start()
 
-		val outputBuilder = StringBuilder()
-		process.inputStream.bufferedReader().useLines { lines ->
-			lines.forEach { outputBuilder.appendLine(it) }
-		}
+    val output = process.inputStream.bufferedReader().readText()
+    val exitCode = process.waitFor()
+    return exitCode to output.trim()
+  }
 
-		val exitCode = process.waitFor()
-		return exitCode to outputBuilder.toString().trim()
-	}
+  override fun execute(command: String, workingDir: String?) {
+    println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    println("▶ Command:")
+    println("  ${if (workingDir != null) "cd $workingDir && " else ""}$command")
+    println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-	override fun execute(command: String, workingDir: String?) {
-		println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-		println("▶ Command:")
-		println("  ${if (workingDir != null) "cd $workingDir && " else ""}$command")
-		println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    val (exitCode, result) = executeCommand(command, workingDir)
 
-		val (exitCode, result) = executeCommand(command, workingDir)
-
-		if (exitCode == 0) {
-			println("✅ Success (exit code: $exitCode)")
-			println("Output:")
-			println(result)
-		} else {
-			println("❌ Failed (exit code: $exitCode)")
-			println("Output:")
-			println(result)
-			throw RuntimeException("ExitCode: $exitCode, Result: $result")
-		}
-	}
+    if (exitCode == 0) {
+      println("✅ Success (exit code: $exitCode)")
+    } else {
+      println("❌ Failed (exit code: $exitCode)")
+      println("Output:")
+      println(result)
+      throw RuntimeException("ExitCode: $exitCode\nResult:\n$result")
+    }
+  }
 }

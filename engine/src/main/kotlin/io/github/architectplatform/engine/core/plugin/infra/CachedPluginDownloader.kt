@@ -13,28 +13,28 @@ import java.nio.file.Paths
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
-class CachedPluginDownloader(
-	private val httpClient: HttpClient
-) : PluginDownloader {
-	private val cache = Paths.get(System.getProperty("user.home"), ".architect-engine", "plugins")
-		.also { Files.createDirectories(it) }
+class CachedPluginDownloader(private val httpClient: HttpClient) : PluginDownloader {
+  private val cache =
+      Paths.get(System.getProperty("user.home"), ".architect-engine", "plugins").also {
+        Files.createDirectories(it)
+      }
 
-	@Property(name = "architect.engine.plugin.cache.enabled", defaultValue = "true")
-	var cacheEnabled: Boolean = true
+  @Property(name = "architect.engine.plugin.cache.enabled", defaultValue = "true")
+  var cacheEnabled: Boolean = true
 
-	override fun download(url: String): File {
-		val jarName = "${url.hashCode()}.jar"
-		val target = cache.resolve(jarName).toFile()
-		if (target.exists() && cacheEnabled) {
-			println("Plugin already downloaded at ${target.absolutePath}")
-			return target
-		}
-		println("Downloading plugin from $url...")
-		val request = HttpRequest.GET<Any>(url)
-		val response = httpClient.toBlocking().exchange(request, ByteArray::class.java)
-		val body = response.body() ?: error("Failed to download plugin: empty response body")
-		Files.write(target.toPath(), body)
-		println("Plugin downloaded to ${target.absolutePath}")
-		return target
-	}
+  override fun download(url: String): File {
+    val jarName = "${url.hashCode()}.jar"
+    val target = cache.resolve(jarName).toFile()
+    if (target.exists() && cacheEnabled) {
+      println("Plugin already downloaded at ${target.absolutePath}")
+      return target
+    }
+    println("Downloading plugin from $url...")
+    val request = HttpRequest.GET<Any>(url)
+    val response = httpClient.toBlocking().exchange(request, ByteArray::class.java)
+    val body = response.body() ?: error("Failed to download plugin: empty response body")
+    Files.write(target.toPath(), body)
+    println("Plugin downloaded to ${target.absolutePath}")
+    return target
+  }
 }

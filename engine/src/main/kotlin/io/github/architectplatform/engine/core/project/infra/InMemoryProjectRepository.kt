@@ -5,5 +5,4 @@ import io.github.architectplatform.engine.core.project.domain.Project
 import io.github.architectplatform.engine.core.utils.InMemoryRepository
 import jakarta.inject.Singleton
 
-@Singleton
-class InMemoryProjectRepository : ProjectRepository, InMemoryRepository<Project>()
+@Singleton class InMemoryProjectRepository : ProjectRepository, InMemoryRepository<Project>()
