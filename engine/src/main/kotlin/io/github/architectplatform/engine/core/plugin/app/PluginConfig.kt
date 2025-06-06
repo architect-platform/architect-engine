@@ -6,5 +6,6 @@ data class PluginConfig(
 	val assetType: String = "jar",
 	val asset: String = "$name.$assetType",
 	val type: String = "github",
+	val path: String = ".",
 	val owner: String = "architect-platform"
 )

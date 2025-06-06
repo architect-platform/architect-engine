@@ -11,6 +11,7 @@ import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
 import java.net.URLClassLoader
+import kotlin.io.path.exists
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -54,6 +55,14 @@ class ProjectPluginLoader(
 					}
 					val url = "https://github.com/${plugin.owner}/${plugin.name}/releases/download/$tag/${plugin.asset}"
 					downloader.download(url)
+				}
+				"local" -> {
+					// Local plugin, assume the asset is a local path
+					val localPath = context.dir.resolve(plugin.path)
+					if (!localPath.exists()) {
+						throw IllegalArgumentException("Local plugin asset not found: ${localPath.toAbsolutePath()}")
+					}
+					localPath.toFile()
 				}
 				else -> throw IllegalArgumentException("Unsupported plugin type: ${plugin.type}")
 			}

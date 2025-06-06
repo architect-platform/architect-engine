@@ -1,4 +1,4 @@
-package io.github.architectplatform.engine.components.installers.context
+package io.github.architectplatform.engine.plugins.installers.context
 
 data class InstallersContext(
 	val enabled: Boolean = false,

@@ -1,9 +1,9 @@
-package io.github.architectplatform.engine.components.installers
+package io.github.architectplatform.engine.plugins.installers
 
 import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.github.architectplatform.api.core.tasks.TaskRegistry
-import io.github.architectplatform.engine.components.installers.context.InstallersContext
-import io.github.architectplatform.engine.components.installers.tasks.CopyInstallerTask
+import io.github.architectplatform.engine.plugins.installers.context.InstallersContext
+import io.github.architectplatform.engine.plugins.installers.tasks.CopyInstallerTask
 import jakarta.inject.Singleton
 
 @Singleton

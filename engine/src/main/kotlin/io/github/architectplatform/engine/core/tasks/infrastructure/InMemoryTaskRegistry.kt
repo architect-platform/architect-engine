@@ -15,6 +15,10 @@ class InMemoryTaskRegistry : TaskRegistry {
 		tasks[task.id] = task
 	}
 
+	override fun get(id: String): Task? {
+		return tasks[id]
+	}
+
 	override fun all(): List<Task> = tasks.values.toList()
 }
 

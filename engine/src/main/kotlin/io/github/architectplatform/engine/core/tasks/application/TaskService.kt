@@ -10,6 +10,7 @@ import jakarta.inject.Singleton
 class TaskService(
 	private val taskRegistry: TaskRegistry,
 	private val projectService: ProjectService,
+	private val executor: TaskExecutor
 ) {
 
 	fun getAllTasks(): List<Task> {
@@ -25,7 +26,7 @@ class TaskService(
 	fun executeTask(taskId: String, projectName: String, args: List<String>): TaskResult {
 		val project = projectService.getProject(projectName) ?: throw IllegalArgumentException("Project not found")
 		val task = getTaskById(taskId) ?: throw IllegalArgumentException("Task not found")
-		return task.execute(project.context, args)
+		return executor.execute(task, project.context, args)
 	}
 
 

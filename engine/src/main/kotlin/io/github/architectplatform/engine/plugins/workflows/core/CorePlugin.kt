@@ -1,6 +1,6 @@
-package io.github.architectplatform.engine.components.workflows.core
+package io.github.architectplatform.engine.plugins.workflows.core
 
-import io.github.architectplatform.api.core.plugins.WorkflowPlugin
+import io.github.architectplatform.api.core.plugins.phase.WorkflowPlugin
 import io.github.architectplatform.api.components.workflows.core.CoreWorkflow
 import jakarta.inject.Singleton
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.components.execution.CommandExecutor
 import io.github.architectplatform.api.components.execution.ResourceExtractor
+import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.core.project.app.repositories.ProjectRepository
 import io.github.architectplatform.engine.core.project.domain.Project
@@ -41,7 +42,7 @@ class ProjectService(
 
 	private fun loadProject(name: String, path: String): Project? {
 		val config = configLoader.load(path) ?: return null
-		val context = InMemoryProjectContext(Path(path), config, servicesMap)
+		val context = ProjectContext(Path(path), config)
 		val plugins = pluginLoader.load(context)
 		plugins.forEach {
 			println("Registering plugin ${it.id} for project $name")
