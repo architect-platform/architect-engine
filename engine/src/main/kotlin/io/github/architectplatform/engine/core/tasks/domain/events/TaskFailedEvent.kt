@@ -4,9 +4,10 @@ import io.github.architectplatform.engine.domain.events.ExecutionTaskEvent
 import io.micronaut.serde.annotation.Serdeable
 
 @Serdeable
-data class TaskStartedEvent(
+data class TaskFailedEvent(
     override val executionId: String,
     override val taskId: String,
-    override val message: String = "Task started",
-    override val success: Boolean = true,
+    val reason: String,
+    override val message: String = "Task failed",
+    override val success: Boolean = false,
 ) : ExecutionTaskEvent

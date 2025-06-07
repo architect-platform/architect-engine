@@ -1,0 +1,39 @@
+package io.github.architectplatform.engine.core.tasks.application
+
+import io.github.architectplatform.engine.domain.events.ArchitectEvent
+import io.github.architectplatform.engine.domain.events.ExecutionEvent
+import io.github.architectplatform.engine.domain.events.ExecutionId
+import io.micronaut.runtime.event.annotation.EventListener
+import jakarta.inject.Singleton
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+
+@Singleton
+class ExecutionEventCollector {
+
+  private val flows = mutableMapOf<ExecutionId, MutableSharedFlow<ExecutionEvent>>()
+
+  private fun newFlow(): MutableSharedFlow<ExecutionEvent> =
+      MutableSharedFlow(
+          replay = 64, // replay last 64 events to new subscribers
+          extraBufferCapacity = 64, // allow buffering more before suspending emitters
+          onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+  fun getFlow(executionId: ExecutionId): Flow<ExecutionEvent> =
+      synchronized(flows) {
+        // Subscribers share this flow
+        flows.getOrPut(executionId) { newFlow() }
+      }
+
+  @EventListener
+  fun onExecutionEvent(event: ArchitectEvent) {
+    if (event is ExecutionEvent) {
+      val flow = flows.getOrPut(event.executionId) { newFlow() }
+      val emitted = flow.tryEmit(event)
+      if (!emitted) {
+        println("❗ Could not emit event for ${event.executionId}")
+      }
+    }
+  }
+}

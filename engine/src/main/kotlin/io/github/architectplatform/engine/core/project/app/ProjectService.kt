@@ -2,15 +2,12 @@ package io.github.architectplatform.engine.core.project.app
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import io.github.architectplatform.api.components.execution.CommandExecutor
-import io.github.architectplatform.api.components.execution.ResourceExtractor
 import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.core.project.app.repositories.ProjectRepository
 import io.github.architectplatform.engine.core.project.domain.Project
 import io.micronaut.context.annotation.Property
 import jakarta.inject.Singleton
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.io.path.Path
 
 @Singleton
@@ -19,19 +16,10 @@ class ProjectService(
     private val taskRegistry: TaskRegistry,
     private val configLoader: ConfigLoader,
     private val pluginLoader: io.github.architectplatform.engine.core.plugin.app.PluginLoader,
-    commandExecutor: CommandExecutor,
-    resourceExtractor: ResourceExtractor,
 ) {
 
   @Property(name = "architect.engine.core.project.cache.enabled", defaultValue = "true")
   var cacheEnabled: Boolean = true
-
-  private val servicesMap = ConcurrentHashMap<Class<*>, Any>()
-
-  init {
-    servicesMap[CommandExecutor::class.java] = commandExecutor
-    servicesMap[ResourceExtractor::class.java] = resourceExtractor
-  }
 
   private val objectMapper =
       ObjectMapper().registerKotlinModule().apply {
@@ -54,18 +42,11 @@ class ProjectService(
               config
             } else
             // Otherwise, get the context from the config using the contextKey
-            config[it.contextKey]
-                    ?: run {
-                      println(
-                          "Context key ${it.contextKey} not found in config, using default context")
-                      it.context
-                    }
+            config[it.contextKey] ?: run { it.context }
 
         require(rawContext != null) {
           "Context for plugin ${it.id} is null, check your config file"
         }
-
-        println("Raw context for plugin ${it.id}: $rawContext (${rawContext::class.qualifiedName})")
 
         val pluginContext: Any =
             when (rawContext) {
@@ -112,7 +93,6 @@ class ProjectService(
         println("Cache is disabled, reloading project $name")
         return loadProject(name, project.path)
       } else {
-        println("Project $name loaded from cache")
         return project
       }
     }
