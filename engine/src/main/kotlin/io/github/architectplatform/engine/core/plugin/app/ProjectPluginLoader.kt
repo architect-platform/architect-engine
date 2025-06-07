@@ -5,6 +5,9 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.github.architectplatform.api.core.project.ProjectContext
 import io.github.architectplatform.api.core.project.getKey
+import io.github.architectplatform.engine.core.plugin.domain.events.PluginLoaded
+import io.github.architectplatform.engine.domain.events.ArchitectEvent
+import io.micronaut.context.event.ApplicationEventPublisher
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.scheduling.TaskExecutors
@@ -19,7 +22,8 @@ class ProjectPluginLoader(
     private val spiLoader: SpiPluginLoader,
     private val downloader: PluginDownloader,
     private val internalPlugins: List<ArchitectPlugin<*>>,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val eventPublisher: ApplicationEventPublisher<ArchitectEvent>,
 ) : PluginLoader {
 
   private val objectMapper = ObjectMapper().registerKotlinModule()
@@ -70,6 +74,7 @@ class ProjectPluginLoader(
           }
       val loader = URLClassLoader(arrayOf(jar.toURI().toURL()), this::class.java.classLoader)
       val loaded = spiLoader.loadFrom(loader)
+      eventPublisher.publishEvent(PluginLoaded(plugin.name, context.dir.toString()))
       println("Loaded plugin ${plugin.name}: ${loaded.size} plugins found")
       enabled += loaded
     }

@@ -4,11 +4,13 @@ import io.github.architectplatform.engine.core.tasks.application.TaskService
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.TaskDTO
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.TaskResultDTO
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.toDTO
+import io.github.architectplatform.engine.domain.events.ArchitectEvent
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
+import io.micronaut.runtime.event.annotation.EventListener
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import kotlinx.coroutines.flow.Flow
@@ -45,5 +47,11 @@ class TasksApiController(
     println("Executing task: $taskName for project: $projectName")
     val result = taskService.executeTask(taskName, projectName, args)
     return result.map { it.toDTO() }.also { println("Task executed: $it") }
+  }
+
+  @EventListener
+  fun onTaskEvent(event: ArchitectEvent) {
+    // Handle task events if needed
+    println("Received task event: $event")
   }
 }

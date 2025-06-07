@@ -1,23 +1,21 @@
 package io.github.architectplatform.engine.core.project.app
 
-import io.github.architectplatform.api.components.execution.CommandExecutor
-import io.github.architectplatform.api.components.execution.ResourceExtractor
 import io.github.architectplatform.api.core.tasks.Environment
+import io.micronaut.context.BeanContext
+import io.micronaut.context.event.ApplicationEventPublisher
 import jakarta.inject.Singleton
-import java.util.concurrent.ConcurrentHashMap
 
 @Singleton
 class ApplicationEnvironment(
-    commandExecutor: CommandExecutor,
-    resourceExtractor: ResourceExtractor
+    private val beanContext: BeanContext,
+    private val eventPublisher: ApplicationEventPublisher<Any>
 ) : Environment {
-  private val services: ConcurrentHashMap<Class<*>, Any> =
-      ConcurrentHashMap(
-          mapOf(
-              CommandExecutor::class.java to commandExecutor,
-              ResourceExtractor::class.java to resourceExtractor))
 
   override fun <T> service(type: Class<T>): T =
-      services[type] as? T
+      beanContext.getBean(type)
           ?: throw IllegalArgumentException("Service of type ${type.name} not found in environment")
+
+  override fun publish(event: Any) {
+    eventPublisher.publishEvent(event)
+  }
 }
