@@ -30,6 +30,9 @@ open class BashCommandExecutor : CommandExecutor {
 
   override fun execute(command: String, workingDir: String?) {
     val (exitCode, result) = executeCommand(command, workingDir)
+    println("Command executed: $command, workingDir: $workingDir")
+    println("Exit code: $exitCode")
+    println("Result:\n$result")
     if (exitCode != 0) {
       error("❌ Command failed with exit code $exitCode\nResult:\n$result")
     }
