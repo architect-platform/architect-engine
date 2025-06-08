@@ -17,7 +17,7 @@ class TaskService(
 ) {
 
   fun getAllTasks(): List<Task> {
-    return taskRegistry.all().filter { it.phase() == null }.sortedBy { it.id }
+    return taskRegistry.all().sortedBy { it.id }
   }
 
   fun getTaskById(taskId: String): Task? {

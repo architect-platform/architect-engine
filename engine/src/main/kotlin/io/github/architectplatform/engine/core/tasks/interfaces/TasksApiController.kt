@@ -23,7 +23,10 @@ class TasksApiController(private val taskService: TaskService) {
   @Get
   fun getAllTasks(@PathVariable projectName: String): List<TaskDTO> {
     logger.info("Fetching all tasks for project: $projectName")
-    return taskService.getAllTasks().map { it.toDTO() }
+    return taskService
+        .getAllTasks()
+        .map { it.toDTO() }
+        .also { logger.info("Found ${it.size} tasks for project: $projectName") }
   }
 
   @Get("/{taskName}")

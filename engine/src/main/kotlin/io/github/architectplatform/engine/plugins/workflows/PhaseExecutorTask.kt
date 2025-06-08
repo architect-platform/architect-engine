@@ -18,6 +18,8 @@ import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskStar
 class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegistry) : Task {
   override val id: String = phase.id
 
+  override fun description(): String = phase.description()
+
   override fun phase(): Phase? = phase.parent()
 
   override fun depends(): List<String> = phase.depends()
