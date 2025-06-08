@@ -20,7 +20,6 @@ class HooksVerifyTask : Task {
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
-    println("Verifying hooks...")
     val projectPath = projectContext.dir
     val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()
     if (!Files.exists(hooksDir)) {

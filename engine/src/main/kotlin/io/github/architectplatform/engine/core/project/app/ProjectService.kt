@@ -8,6 +8,7 @@ import io.github.architectplatform.engine.core.project.app.repositories.ProjectR
 import io.github.architectplatform.engine.core.project.domain.Project
 import io.micronaut.context.annotation.Property
 import jakarta.inject.Singleton
+import org.slf4j.LoggerFactory
 import kotlin.io.path.Path
 
 @Singleton
@@ -17,6 +18,8 @@ class ProjectService(
     private val configLoader: ConfigLoader,
     private val pluginLoader: io.github.architectplatform.engine.core.plugin.app.PluginLoader,
 ) {
+
+  private val logger = LoggerFactory.getLogger(this::class.java)
 
   @Property(name = "architect.engine.core.project.cache.enabled", defaultValue = "true")
   var cacheEnabled: Boolean = true
@@ -34,7 +37,6 @@ class ProjectService(
     val context = ProjectContext(Path(path), config)
     val plugins = pluginLoader.load(context)
     plugins.forEach {
-      println("Registering plugin ${it.id} for project $name")
       try {
         val rawContext =
             if (it.contextKey.isEmpty()) {
@@ -73,15 +75,14 @@ class ProjectService(
   fun registerProject(name: String, path: String) {
     val project = projectRepository.get(name)
     if (project != null) {
-      println("Project $name already registered, skipping...")
+      logger.info("Project $name already registered at path ${project.path}")
       return
     }
-    println("Registering project $name...")
+    logger.info("Registering project $name at path $path")
     val newProject =
         loadProject(name, path)
             ?: throw IllegalArgumentException("Failed to load project $name from path $path")
     projectRepository.save(name, newProject)
-    println("Project $name registered")
   }
 
   fun getProject(name: String): Project? {

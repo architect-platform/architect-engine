@@ -13,12 +13,15 @@ import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
+import org.slf4j.LoggerFactory
 
 @Controller("/api/projects")
 @ExecuteOn(TaskExecutors.IO)
 class ProjectsApiController(
     private val projectService: ProjectService,
 ) {
+
+  private val logger = LoggerFactory.getLogger(this::class.java)
 
   @Get
   fun getAll(): List<ProjectDTO> {
@@ -30,24 +33,25 @@ class ProjectsApiController(
 
   @Post
   fun registerProject(@Body request: RegisterProjectRequest): ProjectDTO {
-    println("Registering project: ${request.name} at path: ${request.path}")
+    logger.info("Registering project: ${request.name} at path: ${request.path}")
     projectService.registerProject(request.name, request.path)
     val project =
         projectService.getProject(request.name)
             ?: throw IllegalStateException("Project not found after registration")
-    return project.toDTO().also { println("Project registered: $it") }
+    return project.toDTO()
   }
 
   @Get("/{name}")
   fun getProject(@PathVariable name: String): ProjectDTO {
-    println("Getting project: $name")
+    logger.info("Fetching project: $name")
     val project = projectService.getProject(name)!!
-    return project.toDTO().also { println("Project found: $it") }
+    return project.toDTO()
   }
 
   @Get("/{projectName}/config")
   fun getContext(@PathVariable projectName: String): Config {
+    logger.info("Fetching context for project: $projectName")
     val project = projectService.getProject(projectName)!!
-    return project.context.config.also { println("Config found: $it") }
+    return project.context.config
   }
 }

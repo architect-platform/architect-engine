@@ -15,6 +15,7 @@ import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
 import java.net.URLClassLoader
 import kotlin.io.path.exists
+import org.slf4j.LoggerFactory
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -25,6 +26,8 @@ class ProjectPluginLoader(
     private val httpClient: HttpClient,
     private val eventPublisher: ApplicationEventPublisher<ArchitectEvent>,
 ) : PluginLoader {
+
+  private val logger = LoggerFactory.getLogger(this::class.java)
 
   private val objectMapper = ObjectMapper().registerKotlinModule()
 
@@ -75,7 +78,7 @@ class ProjectPluginLoader(
       val loader = URLClassLoader(arrayOf(jar.toURI().toURL()), this::class.java.classLoader)
       val loaded = spiLoader.loadFrom(loader)
       eventPublisher.publishEvent(PluginLoaded(plugin.name, context.dir.toString()))
-      println("Loaded plugin ${plugin.name}: ${loaded.size} plugins found")
+      logger.info("Loaded plugin ${plugin.name}: ${loaded.size} plugins found")
       enabled += loaded
     }
 

@@ -23,7 +23,7 @@ class ExecutionApiController(private val taskService: TaskService) {
 
   @Get("/{executionId}")
   fun getExecutionFlow(@PathVariable executionId: ExecutionId): Flow<ExecutionEvent> {
-    println("Getting execution flow for ID: $executionId")
+    logger.info("Fetching execution flow for ID: $executionId")
     val sharedFlow = taskService.getExecutionFlow(executionId)
 
     return flow {

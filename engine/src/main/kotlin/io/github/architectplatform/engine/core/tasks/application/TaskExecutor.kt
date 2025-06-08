@@ -53,6 +53,7 @@ class TaskExecutor(
       val results =
           executionOrder
               .map {
+                Thread.sleep(500) // Simulate some delay for demonstration purposes
                 if (taskCache.isCached(it.id)) {
                   eventPublisher.publishEvent(
                       TaskSkippedEvent(
@@ -68,6 +69,7 @@ class TaskExecutor(
                 eventPublisher.publishEvent(TaskStartedEvent(executionId, it.id))
                 try {
                   val result = it.execute(environment, context, args)
+                  Thread.sleep(500) // Simulate some delay for demonstration purposes
                   if (!result.success) {
                     eventPublisher.publishEvent(
                         TaskFailedEvent(
@@ -78,6 +80,7 @@ class TaskExecutor(
                   taskCache.store(it.id, result)
                   return@map result
                 } catch (e: Exception) {
+                  Thread.sleep(500) // Simulate some delay for demonstration purposes
                   eventPublisher.publishEvent(
                       TaskFailedEvent(executionId, it.id, e.message ?: "Task execution failed"))
                   return@map TaskResult.failure(
@@ -117,7 +120,6 @@ class TaskExecutor(
     }
 
     visit(root)
-    all.keys.forEach { println(" - $it") }
     return all
   }
 

@@ -2,6 +2,7 @@ package io.github.architectplatform.engine.core.tasks.interfaces
 
 import io.github.architectplatform.engine.domain.events.ArchitectEvent
 import io.github.architectplatform.engine.domain.events.ExecutionEvent
+import io.github.architectplatform.engine.domain.events.ExecutionTaskEvent
 import io.micronaut.context.annotation.Context
 import io.micronaut.runtime.event.annotation.EventListener
 import org.slf4j.Logger
@@ -15,7 +16,12 @@ class EventLogger {
   @EventListener
   fun onEvent(event: ArchitectEvent) {
     when (event) {
-      is ExecutionEvent -> logger.info(event.toString())
+      is ExecutionTaskEvent -> {
+        logger.info("${event.self}[${event.executionId}, ${event.taskId}] - ${event.message}")
+      }
+      is ExecutionEvent -> {
+        logger.info("${event.self}[${event.executionId}] - ${event.message}")
+      }
       else -> {}
     }
   }
