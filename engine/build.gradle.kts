@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-  implementation("io.github.architectplatform:architect-api:2.0.0")
+  implementation("io.github.architectplatform:architect-api:2.0.1")
   ksp("io.micronaut:micronaut-http-validation")
   ksp("io.micronaut.serde:micronaut-serde-processor")
   implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
