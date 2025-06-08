@@ -1,6 +1,7 @@
 package io.github.architectplatform.engine.core.tasks.domain.events
 
 import io.github.architectplatform.api.core.tasks.TaskResult
+import io.github.architectplatform.engine.domain.events.ExecutionEventType
 import io.github.architectplatform.engine.domain.events.ExecutionId
 import io.github.architectplatform.engine.domain.events.ExecutionTaskEvent
 import io.micronaut.serde.annotation.SerdeImport
@@ -13,6 +14,7 @@ data class TaskCompletedEvent(
     val result: TaskResult,
     override val message: String = "Task completed",
     override val success: Boolean = true,
+    override val eventType: ExecutionEventType = ExecutionEventType.COMPLETED,
 ) : ExecutionTaskEvent
 
 @SerdeImport(TaskResult::class)

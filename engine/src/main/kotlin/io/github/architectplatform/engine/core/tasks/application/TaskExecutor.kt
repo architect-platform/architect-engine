@@ -19,11 +19,11 @@ import io.micronaut.context.event.ApplicationEventPublisher
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
-import java.io.OutputStream
-import java.io.PrintStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.OutputStream
+import java.io.PrintStream
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -36,11 +36,11 @@ class TaskExecutor(
 
   fun execute(task: Task, context: ProjectContext, args: List<String>): ExecutionId {
     val executionId = generateExecutionId()
-    CoroutineScope(Dispatchers.IO).launch { executeTask(executionId, task, context, args) }
+    CoroutineScope(Dispatchers.IO).launch { syncExecuteTask(executionId, task, context, args) }
     return executionId
   }
 
-  private fun executeTask(
+  private fun syncExecuteTask(
       executionId: ExecutionId,
       task: Task,
       context: ProjectContext,

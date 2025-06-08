@@ -24,7 +24,6 @@ class HooksVerifyTask : Task {
     val projectPath = projectContext.dir
     val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()
     if (!Files.exists(hooksDir)) {
-      println("❌ .git/hooks directory does not exist.")
       return TaskResult.failure("Hooks directory does not exist")
     }
 
@@ -33,8 +32,7 @@ class HooksVerifyTask : Task {
 
     val resourceUrl = classLoader.getResource(resourceRoot)
     if (resourceUrl == null) {
-      println("❌ Could not find resources under $resourceRoot")
-      return TaskResult.failure("Resource not found")
+      return TaskResult.failure("Resource $resourceRoot not found")
     }
 
     val expectedHooks: List<String> =
@@ -55,32 +53,18 @@ class HooksVerifyTask : Task {
           }
 
           else -> {
-            println("❌ Unsupported resource protocol: ${resourceUrl.protocol}")
-            return TaskResult.failure("Unsupported resource protocol")
+            return TaskResult.failure("Unsupported resource protocol: ${resourceUrl.protocol}")
           }
         }
-
-    var allPresent = true
 
     for (hook in expectedHooks) {
       val hookPath = hooksDir.resolve(hook)
       if (!Files.exists(hookPath)) {
-        println("❌ Missing hook: $hook")
-        allPresent = false
+        return TaskResult.failure("Hook is missing: $hook")
       } else if (!Files.isExecutable(hookPath)) {
-        println("⚠️ Hook exists but is not executable: $hook")
-        allPresent = false
-      } else {
-        println("✅ Hook present and executable: $hook")
+        return TaskResult.failure("Hook is not executable: $hook")
       }
     }
-
-    if (allPresent) {
-      println("✅ All expected Git hooks are properly installed.")
-      return TaskResult.success("All hooks verified successfully")
-    } else {
-      println("⚠️ Some Git hooks are missing or not executable.")
-      return TaskResult.failure("Some hooks are missing or not executable")
-    }
+    return TaskResult.success("All hooks are present and executable")
   }
 }

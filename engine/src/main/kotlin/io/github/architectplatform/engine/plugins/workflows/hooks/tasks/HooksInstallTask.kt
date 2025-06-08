@@ -20,7 +20,6 @@ class HooksInstallTask : Task {
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
-    println("Installing hooks...")
     val resourceRoot = "hooks"
     val projectPath = projectContext.dir
     val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()

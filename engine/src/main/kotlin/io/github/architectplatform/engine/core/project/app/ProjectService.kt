@@ -64,9 +64,7 @@ class ProjectService(
                     "Invalid context format for plugin ${it.id}: " +
                         "expected object or list, got ${rawContext::class.qualifiedName}")
         it.init(pluginContext)
-      } catch (e: Exception) {
-        println("Failed to load context ${it.id} for project $name: ${e.message}")
-      }
+      } catch (_: Exception) {}
       it.register(taskRegistry)
     }
     return Project(name, path, context, plugins)
