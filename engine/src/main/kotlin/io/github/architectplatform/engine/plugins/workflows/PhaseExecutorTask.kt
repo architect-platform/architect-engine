@@ -8,9 +8,11 @@ import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.api.core.tasks.phase.Phase
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.toDTO
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseCompleted
+import io.github.architectplatform.engine.plugins.workflows.events.PhaseFailed
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseLoaded
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseStarted
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskCompleted
+import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskFailed
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskStarted
 
 class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegistry) : Task {
@@ -33,11 +35,21 @@ class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegi
     val results =
         children.map { task ->
           environment.publish(PhaseTaskStarted(task, phase))
-          val taskResult = task.execute(environment, projectContext, args)
-          environment.publish(PhaseTaskCompleted(task, phase, taskResult))
-          taskResult
+          val result = task.execute(environment, projectContext, args)
+          if (result.success) {
+            environment.publish(PhaseTaskCompleted(task, phase, result))
+          } else {
+            environment.publish(
+                PhaseTaskFailed(taskId = task.id, reason = result.message ?: "Unknown error"))
+          }
+          result
         }
 
+    val success = results.all { it.success }
+    if (!success) {
+      environment.publish(PhaseFailed(phase, results))
+      return TaskResult.failure("Phase execution failed for phase: $phase", results = results)
+    }
     environment.publish(PhaseCompleted(phase, results))
     return TaskResult.success("Executed phase: $phase", results = results)
   }

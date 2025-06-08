@@ -11,3 +11,4 @@ data class PhaseTaskCompleted(val task: Task, val phase: Phase, val result: Task
       "Task completed: ${task.id} in phase: ${phase.id} with result: ${result.success}"
   override val results: List<TaskResult> = listOf(result)
 }
+

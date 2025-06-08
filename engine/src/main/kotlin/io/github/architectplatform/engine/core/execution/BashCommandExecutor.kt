@@ -10,11 +10,22 @@ open class BashCommandExecutor : CommandExecutor {
   private fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
     val processBuilder = ProcessBuilder("sh", "-c", command)
     workingDir?.let { processBuilder.directory(File(it)) }
+
+    processBuilder.redirectErrorStream(true) // Merge stderr into stdout
+
     val process = processBuilder.start()
 
-    val output = process.inputStream.bufferedReader().readText()
+    val output = StringBuilder()
+    val reader = process.inputStream.bufferedReader()
+
+    // Read process output line by line
+    val outputThread = Thread { reader.forEachLine { line -> output.appendLine(line) } }
+
+    outputThread.start()
     val exitCode = process.waitFor()
-    return exitCode to output.trim()
+    outputThread.join()
+
+    return exitCode to output.toString().trim()
   }
 
   override fun execute(command: String, workingDir: String?) {

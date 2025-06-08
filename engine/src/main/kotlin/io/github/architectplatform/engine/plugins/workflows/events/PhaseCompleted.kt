@@ -7,3 +7,4 @@ data class PhaseCompleted(val phase: Phase, override val results: List<TaskResul
   override val success: Boolean = results.all { it.success }
   override val message: String = "Phase completed: ${phase.id} with ${results.size} results"
 }
+

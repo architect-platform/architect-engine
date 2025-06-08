@@ -19,11 +19,11 @@ import io.micronaut.context.event.ApplicationEventPublisher
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
+import java.io.OutputStream
+import java.io.PrintStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.OutputStream
-import java.io.PrintStream
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -68,20 +68,32 @@ class TaskExecutor(
                 eventPublisher.publishEvent(TaskStartedEvent(executionId, it.id))
                 try {
                   val result = it.execute(environment, context, args)
-                  eventPublisher.publishEvent(TaskCompletedEvent(executionId, it.id, result))
+                  if (!result.success) {
+                    eventPublisher.publishEvent(
+                        TaskFailedEvent(
+                            executionId, it.id, result.message ?: "Task execution failed"))
+                  } else {
+                    eventPublisher.publishEvent(TaskCompletedEvent(executionId, it.id, result))
+                  }
                   taskCache.store(it.id, result)
                   return@map result
                 } catch (e: Exception) {
                   eventPublisher.publishEvent(
                       TaskFailedEvent(executionId, it.id, e.message ?: "Task execution failed"))
+                  return@map TaskResult.failure(
+                      "Task '${it.id}' failed with exception: ${e.message ?: "Unknown error"}")
                 }
               }
-              .map { it as TaskResult }
-      eventPublisher.publishEvent(
-          ExecutionCompletedEvent(
-              executionId,
-              TaskResult.success("All tasks executed successfully", results),
-          ))
+              .map { it }
+      val success = results.all { it.success }
+      if (!success) {
+        eventPublisher.publishEvent(
+            ExecutionFailedEvent(executionId, "Some tasks failed during execution", results))
+      } else {
+        eventPublisher.publishEvent(
+            ExecutionCompletedEvent(
+                executionId, TaskResult.success("Execution completed", results)))
+      }
     } catch (e: Exception) {
       eventPublisher.publishEvent(
           ExecutionFailedEvent(executionId, e.message ?: "Task execution failed"))
