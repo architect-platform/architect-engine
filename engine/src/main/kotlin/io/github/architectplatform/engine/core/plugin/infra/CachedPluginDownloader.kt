@@ -1,9 +1,9 @@
 package io.github.architectplatform.engine.core.plugin.infra
 
 import io.github.architectplatform.engine.core.plugin.app.PluginDownloader
-import io.github.architectplatform.engine.core.plugin.domain.events.PluginDownloadCompleted
-import io.github.architectplatform.engine.core.plugin.domain.events.PluginDownloadSkipped
-import io.github.architectplatform.engine.core.plugin.domain.events.PluginDownloadStarted
+import io.github.architectplatform.engine.core.plugin.domain.events.PluginEvents.pluginDownloadCompleted
+import io.github.architectplatform.engine.core.plugin.domain.events.PluginEvents.pluginDownloadSkipped
+import io.github.architectplatform.engine.core.plugin.domain.events.PluginEvents.pluginDownloadStarted
 import io.github.architectplatform.engine.domain.events.ArchitectEvent
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.event.ApplicationEventPublisher
@@ -20,7 +20,7 @@ import java.nio.file.Paths
 @ExecuteOn(TaskExecutors.BLOCKING)
 class CachedPluginDownloader(
     private val httpClient: HttpClient,
-    private val eventPublisher: ApplicationEventPublisher<ArchitectEvent>,
+    private val eventPublisher: ApplicationEventPublisher<ArchitectEvent<*>>,
 ) : PluginDownloader {
   private val cache =
       Paths.get(System.getProperty("user.home"), ".architect-engine", "plugins").also {
@@ -34,19 +34,16 @@ class CachedPluginDownloader(
     val jarName = "${url.hashCode()}.jar"
     val target = cache.resolve(jarName).toFile()
     if (cacheEnabled && target.exists()) {
-      eventPublisher.publishEvent(
-          PluginDownloadSkipped(pluginId = jarName, message = "Plugin already cached"))
+      eventPublisher.publishEvent(pluginDownloadSkipped(pluginId = jarName))
       return target
     }
-    eventPublisher.publishEvent(
-        PluginDownloadStarted(pluginId = jarName, message = "Downloading plugin from $url"))
+    eventPublisher.publishEvent(pluginDownloadStarted(pluginId = jarName))
     val request = HttpRequest.GET<Any>(url)
     val response = httpClient.toBlocking().exchange(request, ByteArray::class.java)
     val body = response.body() ?: error("Failed to download plugin: empty response body")
     Files.write(target.toPath(), body)
 
-    eventPublisher.publishEvent(
-        PluginDownloadCompleted(pluginId = jarName, message = "Plugin downloaded successfully"))
+    eventPublisher.publishEvent(pluginDownloadCompleted(pluginId = jarName))
     return target
   }
 }

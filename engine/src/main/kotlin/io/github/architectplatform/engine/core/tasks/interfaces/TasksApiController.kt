@@ -22,7 +22,6 @@ class TasksApiController(private val taskService: TaskService) {
 
   @Get
   fun getAllTasks(@PathVariable projectName: String): List<TaskDTO> {
-    logger.info("Fetching all tasks for project: $projectName")
     return taskService
         .getAllTasks()
         .map { it.toDTO() }
@@ -34,7 +33,6 @@ class TasksApiController(private val taskService: TaskService) {
       @PathVariable projectName: String,
       @PathVariable taskName: String,
   ): TaskDTO {
-    logger.info("Fetching task: $taskName for project: $projectName")
     val task = taskService.getTaskById(taskName)!!
     return task.toDTO()
   }
@@ -45,7 +43,6 @@ class TasksApiController(private val taskService: TaskService) {
       @PathVariable taskName: String,
       @Body args: List<String> = emptyList(),
   ): ExecutionId {
-    logger.info("Executing task: $taskName for project: $projectName with args: $args")
     return taskService.executeTask(taskName, projectName, args)
   }
 }

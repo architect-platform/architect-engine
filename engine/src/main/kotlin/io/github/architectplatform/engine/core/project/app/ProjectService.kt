@@ -75,10 +75,9 @@ class ProjectService(
   fun registerProject(name: String, path: String) {
     val project = projectRepository.get(name)
     if (project != null) {
-      logger.info("Project $name already registered at path ${project.path}")
+      logger.debug("Project $name already registered at path ${project.path}")
       return
     }
-    logger.info("Registering project $name at path $path")
     val newProject =
         loadProject(name, path)
             ?: throw IllegalArgumentException("Failed to load project $name from path $path")

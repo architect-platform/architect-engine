@@ -3,6 +3,7 @@ package io.github.architectplatform.engine.core.tasks.application
 import io.github.architectplatform.api.core.tasks.Task
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.core.project.app.ProjectService
+import io.github.architectplatform.engine.domain.events.ArchitectEvent
 import io.github.architectplatform.engine.domain.events.ExecutionEvent
 import io.github.architectplatform.engine.domain.events.ExecutionId
 import jakarta.inject.Singleton
@@ -35,7 +36,7 @@ class TaskService(
     return executor.execute(task, project.context, args)
   }
 
-  fun getExecutionFlow(executionId: ExecutionId): Flow<ExecutionEvent> {
+  fun getExecutionFlow(executionId: ExecutionId): Flow<ArchitectEvent<ExecutionEvent>> {
     return eventCollector.getFlow(executionId)
   }
 }

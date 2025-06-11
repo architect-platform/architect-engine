@@ -2,15 +2,18 @@ package io.github.architectplatform.engine.domain.events
 
 import java.util.*
 
-typealias ExecutionId = String
-
 fun generateExecutionId(): ExecutionId {
   return UUID.randomUUID().toString().substring(0, 8)
 }
 
-interface ArchitectEvent {
-  val success: Boolean
-  val message: String
-  val self: String
-    get() = this::class.simpleName ?: "unknown_event"
+typealias ArchitectEventId = String
+
+interface ArchitectEvent<Model : Any> {
+  val id: ArchitectEventId
+  val event: Model?
 }
+
+abstract class AbstractArchitectEvent<Model : Any>(
+    override val id: ArchitectEventId,
+    override val event: Model? = null,
+) : ArchitectEvent<Model>

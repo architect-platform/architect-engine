@@ -5,13 +5,13 @@ import io.github.architectplatform.api.core.tasks.Environment
 import io.github.architectplatform.api.core.tasks.Task
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.api.core.tasks.TaskResult
-import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionCompletedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionFailedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionStartedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.TaskCompletedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.TaskFailedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.TaskSkippedEvent
-import io.github.architectplatform.engine.core.tasks.domain.events.TaskStartedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionEvents.executionCompletedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionEvents.executionFailedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.ExecutionEvents.executionStartedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.TaskEvents.taskCompletedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.TaskEvents.taskFailedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.TaskEvents.taskSkippedEvent
+import io.github.architectplatform.engine.core.tasks.domain.events.TaskEvents.taskStartedEvent
 import io.github.architectplatform.engine.domain.events.ArchitectEvent
 import io.github.architectplatform.engine.domain.events.ExecutionId
 import io.github.architectplatform.engine.domain.events.generateExecutionId
@@ -31,7 +31,7 @@ class TaskExecutor(
     private val taskRegistry: TaskRegistry,
     private val environment: Environment,
     private val taskCache: TaskCache,
-    private val eventPublisher: ApplicationEventPublisher<ArchitectEvent>
+    private val eventPublisher: ApplicationEventPublisher<ArchitectEvent<*>>
 ) {
 
   fun execute(task: Task, context: ProjectContext, args: List<String>): ExecutionId {
@@ -47,7 +47,7 @@ class TaskExecutor(
       args: List<String>
   ) {
     try {
-      eventPublisher.publishEvent(ExecutionStartedEvent(executionId))
+      eventPublisher.publishEvent(executionStartedEvent(executionId))
       val allTasks = resolveAllTasks(task)
       val executionOrder = topologicalSort(allTasks)
       val results =
@@ -56,33 +56,39 @@ class TaskExecutor(
                 Thread.sleep(500) // Simulate some delay for demonstration purposes
                 if (taskCache.isCached(it.id)) {
                   eventPublisher.publishEvent(
-                      TaskSkippedEvent(
-                          executionId, it.id, "Task is cached and will not be executed"))
+                      taskSkippedEvent(
+                          executionId,
+                          it.id,
+                      ))
                   val cachedResult = taskCache.get(it.id)
                   if (cachedResult != null) {
-                    eventPublisher.publishEvent(
-                        TaskCompletedEvent(executionId, it.id, cachedResult))
+                    eventPublisher.publishEvent(taskCompletedEvent(executionId, it.id))
                     return@map cachedResult
                   }
                 }
 
-                eventPublisher.publishEvent(TaskStartedEvent(executionId, it.id))
+                eventPublisher.publishEvent(taskStartedEvent(executionId, it.id))
                 try {
                   val result = it.execute(environment, context, args)
                   Thread.sleep(500) // Simulate some delay for demonstration purposes
                   if (!result.success) {
                     eventPublisher.publishEvent(
-                        TaskFailedEvent(
-                            executionId, it.id, result.message ?: "Task execution failed"))
+                        taskFailedEvent(
+                            executionId,
+                            it.id,
+                        ))
                   } else {
-                    eventPublisher.publishEvent(TaskCompletedEvent(executionId, it.id, result))
+                    eventPublisher.publishEvent(taskCompletedEvent(executionId, it.id))
                   }
                   taskCache.store(it.id, result)
                   return@map result
                 } catch (e: Exception) {
                   Thread.sleep(500) // Simulate some delay for demonstration purposes
                   eventPublisher.publishEvent(
-                      TaskFailedEvent(executionId, it.id, e.message ?: "Task execution failed"))
+                      taskFailedEvent(
+                          executionId,
+                          it.id,
+                      ))
                   return@map TaskResult.failure(
                       "Task '${it.id}' failed with exception: ${e.message ?: "Unknown error"}")
                 }
@@ -90,16 +96,15 @@ class TaskExecutor(
               .map { it }
       val success = results.all { it.success }
       if (!success) {
-        eventPublisher.publishEvent(
-            ExecutionFailedEvent(executionId, "Some tasks failed during execution", results))
+        eventPublisher.publishEvent(executionFailedEvent(executionId))
       } else {
-        eventPublisher.publishEvent(
-            ExecutionCompletedEvent(
-                executionId, TaskResult.success("Execution completed", results)))
+        eventPublisher.publishEvent(executionCompletedEvent(executionId))
       }
     } catch (e: Exception) {
       eventPublisher.publishEvent(
-          ExecutionFailedEvent(executionId, e.message ?: "Task execution failed"))
+          executionFailedEvent(
+              executionId,
+          ))
     }
   }
 

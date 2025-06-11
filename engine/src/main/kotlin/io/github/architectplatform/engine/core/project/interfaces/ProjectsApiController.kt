@@ -33,7 +33,6 @@ class ProjectsApiController(
 
   @Post
   fun registerProject(@Body request: RegisterProjectRequest): ProjectDTO {
-    logger.info("Registering project: ${request.name} at path: ${request.path}")
     projectService.registerProject(request.name, request.path)
     val project =
         projectService.getProject(request.name)

@@ -12,25 +12,26 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 @Singleton
 class ExecutionEventCollector {
 
-  private val flows = mutableMapOf<ExecutionId, MutableSharedFlow<ExecutionEvent>>()
+  private val flows = mutableMapOf<ExecutionId, MutableSharedFlow<ArchitectEvent<ExecutionEvent>>>()
 
-  private fun newFlow(): MutableSharedFlow<ExecutionEvent> =
+  private fun newFlow(): MutableSharedFlow<ArchitectEvent<ExecutionEvent>> =
       MutableSharedFlow(
           replay = 64, // replay last 64 events to new subscribers
           extraBufferCapacity = 64, // allow buffering more before suspending emitters
           onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
-  fun getFlow(executionId: ExecutionId): Flow<ExecutionEvent> =
+  fun getFlow(executionId: ExecutionId): Flow<ArchitectEvent<ExecutionEvent>> =
       synchronized(flows) {
         // Subscribers share this flow
         flows.getOrPut(executionId) { newFlow() }
       }
 
   @EventListener
-  fun onExecutionEvent(event: ArchitectEvent) {
+  fun onExecutionEvent(eventWrapper: ArchitectEvent<*>) {
+    val event = eventWrapper.event
     if (event is ExecutionEvent) {
       val flow = flows.getOrPut(event.executionId) { newFlow() }
-      val emitted = flow.tryEmit(event)
+      val emitted = flow.tryEmit(eventWrapper as ArchitectEvent<ExecutionEvent>)
       if (!emitted) {
         println("❗ Could not emit event for ${event.executionId}")
       }

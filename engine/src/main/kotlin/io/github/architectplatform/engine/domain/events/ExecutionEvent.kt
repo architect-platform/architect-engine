@@ -1,6 +1,20 @@
 package io.github.architectplatform.engine.domain.events
+//
+// Execution
+//
 
-interface ExecutionEvent : ArchitectEvent {
+typealias ExecutionId = String
+
+interface ExecutionEvent {
   val executionId: ExecutionId
-  val eventType: ExecutionEventType
+  val executionEventType: ExecutionEventType
+  val success: Boolean
+}
+
+enum class ExecutionEventType {
+  STARTED,
+  UPDATED,
+  COMPLETED,
+  FAILED,
+  SKIPPED
 }
