@@ -51,21 +51,21 @@ jobs:
           architect engine start
 
       - name: Init
-        run: architect init
+        run: architect init --plain
 
       - name: Verify
-        run: architect verify
+        run: architect verify --plain
 
       - name: Build
-        run: architect build
+        run: architect build --plain
 
       - name: Test
-        run: architect test
+        run: architect test --plain
 
       - name: Release
-        run: architect release
+        run: architect release --plain
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Publish
-        run: architect publish
+        run: architect publish --plain
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
