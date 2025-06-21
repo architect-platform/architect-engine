@@ -3,8 +3,8 @@ plugins {
   id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
   id("com.google.devtools.ksp") version "1.9.25-1.0.20"
   id("com.github.johnrengelman.shadow") version "8.1.1"
-  id("io.micronaut.application") version "4.5.3"
-  id("io.micronaut.aot") version "4.5.3"
+  id("io.micronaut.application") version "4.5.4"
+  id("io.micronaut.aot") version "4.5.4"
 }
 
 version = "2.1.0"
@@ -37,9 +37,9 @@ dependencies {
   ksp("io.micronaut.serde:micronaut-serde-processor")
   implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
   implementation("io.micronaut.serde:micronaut-serde-jackson")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.10.2")
   implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
   implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
