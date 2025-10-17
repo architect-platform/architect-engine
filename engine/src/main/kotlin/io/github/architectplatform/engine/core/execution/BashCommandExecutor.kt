@@ -7,8 +7,8 @@ import java.io.File
 @Singleton
 open class BashCommandExecutor : CommandExecutor {
 
-  private fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
-    val processBuilder = ProcessBuilder("sh", "-c", command)
+  fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
+    val processBuilder = ProcessBuilder("bash", "-c", command)
     workingDir?.let { processBuilder.directory(File(it)) }
 
     processBuilder.redirectErrorStream(true) // Merge stderr into stdout

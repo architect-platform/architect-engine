@@ -11,7 +11,7 @@ class InstallersPlugin : ArchitectPlugin<InstallersContext> {
   override val id: String = "installers-plugin"
   override val contextKey: String = "installers"
   override val ctxClass: Class<InstallersContext> = InstallersContext::class.java
-  override var context: InstallersContext = InstallersContext()
+  override lateinit var context: InstallersContext
 
   override fun register(registry: TaskRegistry) {
     registry.add(CopyInstallerTask(context))
