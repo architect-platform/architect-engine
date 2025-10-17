@@ -8,14 +8,17 @@ import io.github.architectplatform.api.core.tasks.TaskResult
 import io.github.architectplatform.api.core.tasks.phase.Phase
 import io.github.architectplatform.engine.core.tasks.interfaces.dto.toDTO
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseCompleted
-import io.github.architectplatform.engine.plugins.workflows.events.PhaseFailed
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseLoaded
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseStarted
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskCompleted
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskFailed
 import io.github.architectplatform.engine.plugins.workflows.events.PhaseTaskStarted
+import org.slf4j.LoggerFactory
 
 class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegistry) : Task {
+
+  private val logger = LoggerFactory.getLogger(this::class.java)
+
   override val id: String = phase.id
 
   override fun description(): String = phase.description()
@@ -39,8 +42,11 @@ class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegi
           environment.publish(PhaseTaskStarted(task, phase))
           val result = task.execute(environment, projectContext, args)
           if (result.success) {
+            logger.info("Task ${task.id} in phase ${phase.id} succeeded: ${result.message}")
             environment.publish(PhaseTaskCompleted(task, phase, result))
           } else {
+            logger.error("Task ${task.id} in phase ${phase.id} failed: ${result.message}")
+            result.results.forEach { logger.error("  Sub-result: ${it.message}") }
             environment.publish(
                 PhaseTaskFailed(taskId = task.id, reason = result.message ?: "Unknown error"))
           }
@@ -49,7 +55,8 @@ class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegi
 
     val success = results.all { it.success }
     if (!success) {
-      environment.publish(PhaseFailed(phase, results))
+      logger.error("Phase ${phase.id} failed due to task failures")
+      environment.publish(PhaseTaskFailed(phase.id, "Some tasks in phase failed", results))
       return TaskResult.failure("Phase execution failed for phase: $phase", results = results)
     }
     environment.publish(PhaseCompleted(phase, results))

@@ -3,18 +3,18 @@ package io.github.architectplatform.engine.core.project.app
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.core.project.ProjectContext
-import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.core.project.app.repositories.ProjectRepository
 import io.github.architectplatform.engine.core.project.domain.Project
+import io.github.architectplatform.engine.core.tasks.infrastructure.InMemoryTaskRegistry
 import io.micronaut.context.annotation.Property
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
+import java.io.File
 import kotlin.io.path.Path
 
 @Singleton
 class ProjectService(
     private val projectRepository: ProjectRepository,
-    private val taskRegistry: TaskRegistry,
     private val configLoader: ConfigLoader,
     private val pluginLoader: io.github.architectplatform.engine.core.plugin.app.PluginLoader,
 ) {
@@ -35,7 +35,26 @@ class ProjectService(
   private fun loadProject(name: String, path: String): Project? {
     val config = configLoader.load(path) ?: return null
     val context = ProjectContext(Path(path), config)
+
+    // Call this method for every subfolder and build the subProjects list
+    val subProjects = mutableListOf<Project>()
+    val dir = File(path)
+    dir.listFiles()?.forEach { file ->
+      if (file.isDirectory) {
+        val subProject =
+            loadProject(
+                file.name,
+                file.absolutePath,
+            )
+        if (subProject != null) {
+          subProjects.add(subProject)
+        }
+      }
+    }
+
+    println("Loading plugins for project $name at path $path")
     val plugins = pluginLoader.load(context)
+    val taskRegistry = InMemoryTaskRegistry()
     plugins.forEach {
       try {
         val rawContext =
@@ -69,7 +88,10 @@ class ProjectService(
       } catch (_: Exception) {}
       it.register(taskRegistry)
     }
-    return Project(name, path, context, plugins)
+
+    logger.info(
+        "Loaded project $name at path $path with ${plugins.size} plugins and ${subProjects.size} subprojects")
+    return Project(name, path, context, plugins, subProjects, taskRegistry)
   }
 
   fun registerProject(name: String, path: String) {

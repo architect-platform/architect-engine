@@ -13,9 +13,9 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
+import org.slf4j.LoggerFactory
 import java.net.URLClassLoader
 import kotlin.io.path.exists
-import org.slf4j.LoggerFactory
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -36,7 +36,7 @@ class ProjectPluginLoader(
     // 1) Always include CorePlugin
     enabled += internalPlugins
 
-    val rawContext = context.config.getKey<Any>("plugins") ?: Object()
+    val rawContext = context.config.getKey<Any>("plugins") ?: emptyList<PluginConfig>()
     val plugins: List<PluginConfig> =
         when (rawContext) {
           is List<*> -> {

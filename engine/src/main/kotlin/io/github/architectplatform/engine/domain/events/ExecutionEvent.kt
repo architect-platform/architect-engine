@@ -6,6 +6,7 @@ package io.github.architectplatform.engine.domain.events
 typealias ExecutionId = String
 
 interface ExecutionEvent {
+  val project: String
   val executionId: ExecutionId
   val executionEventType: ExecutionEventType
   val success: Boolean

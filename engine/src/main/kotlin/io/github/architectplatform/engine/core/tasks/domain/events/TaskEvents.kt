@@ -14,6 +14,7 @@ object TaskEvents {
 
   @Serdeable
   data class TaskEventDTO(
+      override val project: String,
       override val executionId: ExecutionId,
       override val taskId: String,
       override val success: Boolean = true,
@@ -21,6 +22,7 @@ object TaskEvents {
   ) : ExecutionTaskEvent
 
   fun taskCompletedEvent(
+      project: String,
       executionId: ExecutionId,
       taskId: String,
       success: Boolean = true,
@@ -29,6 +31,7 @@ object TaskEvents {
         id = "task.completed",
         event =
             TaskEventDTO(
+                project = project,
                 executionId = executionId,
                 taskId = taskId,
                 success = success,
@@ -36,6 +39,7 @@ object TaskEvents {
   }
 
   fun taskFailedEvent(
+      project: String,
       executionId: ExecutionId,
       taskId: String,
       success: Boolean = false,
@@ -44,6 +48,7 @@ object TaskEvents {
         id = "task.failed",
         event =
             TaskEventDTO(
+                project = project,
                 executionId = executionId,
                 taskId = taskId,
                 success = success,
@@ -51,6 +56,7 @@ object TaskEvents {
   }
 
   fun taskSkippedEvent(
+      project: String,
       executionId: ExecutionId,
       taskId: String,
       success: Boolean = true,
@@ -59,6 +65,7 @@ object TaskEvents {
         id = "task.skipped",
         event =
             TaskEventDTO(
+                project = project,
                 executionId = executionId,
                 taskId = taskId,
                 success = success,
@@ -66,6 +73,7 @@ object TaskEvents {
   }
 
   fun taskStartedEvent(
+      project: String,
       executionId: ExecutionId,
       taskId: String,
       success: Boolean = true,
@@ -74,6 +82,7 @@ object TaskEvents {
         id = "task.started",
         event =
             TaskEventDTO(
+                project = project,
                 executionId = executionId,
                 taskId = taskId,
                 success = success,

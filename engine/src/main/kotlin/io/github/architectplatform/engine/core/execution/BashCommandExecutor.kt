@@ -3,9 +3,12 @@ package io.github.architectplatform.engine.core.execution
 import io.github.architectplatform.api.components.execution.CommandExecutor
 import jakarta.inject.Singleton
 import java.io.File
+import org.slf4j.LoggerFactory
 
 @Singleton
 open class BashCommandExecutor : CommandExecutor {
+
+  private val logger = LoggerFactory.getLogger(this::class.java)
 
   private fun executeCommand(command: String, workingDir: String? = null): Pair<Int, String> {
     val processBuilder = ProcessBuilder("sh", "-c", command)
@@ -31,6 +34,7 @@ open class BashCommandExecutor : CommandExecutor {
   override fun execute(command: String, workingDir: String?) {
     val (exitCode, result) = executeCommand(command, workingDir)
     if (exitCode != 0) {
+      println("❌ Command failed with exit code $exitCode\nResult:\n$result")
       error("❌ Command failed with exit code $exitCode\nResult:\n$result")
     }
   }

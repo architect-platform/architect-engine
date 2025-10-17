@@ -1,6 +1,13 @@
 project:
   name: architect-engine
   description: "The Architect Engine"
+  projects:
+    - name: architect-engine
+    - name: architect-cli
+    - name: architect-api
+    - name: gradle-architected
+    - name: github-architected
+
 
 plugins:
   - name: gradle-architected

@@ -10,12 +10,14 @@ object ExecutionEvents {
 
   @Serdeable
   data class ExecutionEventDTO(
+      override val project: String,
       override val executionId: String,
       override val success: Boolean,
       override val executionEventType: ExecutionEventType,
   ) : ExecutionEvent
 
   fun executionStartedEvent(
+      project: String,
       executionId: String,
       success: Boolean = true,
   ): ArchitectEvent<ExecutionEvent> {
@@ -23,6 +25,7 @@ object ExecutionEvents {
         id = "execution.started",
         event =
             ExecutionEventDTO(
+                project = project,
                 executionId = executionId,
                 success = success,
                 executionEventType = ExecutionEventType.STARTED,
@@ -30,6 +33,7 @@ object ExecutionEvents {
   }
 
   fun executionCompletedEvent(
+      project: String,
       executionId: String,
       success: Boolean = true,
   ): ArchitectEvent<ExecutionEvent> {
@@ -37,6 +41,7 @@ object ExecutionEvents {
         id = "execution.completed",
         event =
             ExecutionEventDTO(
+                project = project,
                 executionId = executionId,
                 success = success,
                 executionEventType = ExecutionEventType.COMPLETED,
@@ -44,6 +49,7 @@ object ExecutionEvents {
   }
 
   fun executionFailedEvent(
+      project: String,
       executionId: String,
       success: Boolean = false,
   ): ArchitectEvent<ExecutionEvent> {
@@ -51,6 +57,7 @@ object ExecutionEvents {
         id = "execution.failed",
         event =
             ExecutionEventDTO(
+                project = project,
                 executionId = executionId,
                 success = success,
                 executionEventType = ExecutionEventType.FAILED,
