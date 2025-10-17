@@ -22,8 +22,10 @@ class ConfigLoader(private val configParser: ConfigParser) {
 
     // 1) Load the main architect.yml/yaml if present
     val rootYaml =
-        File(projectPath, "architect.yml").takeIf { it.exists() }
-            ?: File(projectPath, "architect.yaml").takeIf { it.exists() }
+        File(projectPath, "architect.yml").takeIf { it.exists() && it.isFile && it.canRead() }
+            ?: File(projectPath, "architect.yaml").takeIf {
+              it.exists() && it.isFile && it.canRead()
+            }
 
     if (rootYaml == null || rootYaml.readText().isEmpty()) {
       println("No architect.yml or architect.yaml found in $projectPath, skipping.")

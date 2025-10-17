@@ -51,6 +51,10 @@ dependencies {
   runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
   runtimeOnly("org.yaml:snakeyaml")
   testImplementation("io.micronaut:micronaut-http-client")
+  testImplementation("io.micronaut.test:micronaut-test-junit5")
+  testImplementation("io.micronaut.test:micronaut-test-kotest5")
+  testImplementation("org.assertj:assertj-core:3.6.1")
+  testImplementation("org.mockito:mockito-core:5.5.0")
 }
 
 application { mainClass.set("io.github.architectplatform.engine.ApplicationKt") }
