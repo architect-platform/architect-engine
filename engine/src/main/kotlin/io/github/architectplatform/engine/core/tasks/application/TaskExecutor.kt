@@ -38,20 +38,27 @@ class TaskExecutor(
 
   private val logger = LoggerFactory.getLogger(this::class.java)
 
-  fun execute(project: Project, task: Task, context: ProjectContext, args: List<String>): ExecutionId {
+  fun execute(
+      project: Project,
+      task: Task,
+      context: ProjectContext,
+      args: List<String>
+  ): ExecutionId {
     val executionId = generateExecutionId()
-    CoroutineScope(Dispatchers.IO).launch { syncExecuteTask(executionId, task, context, args, project.taskRegistry) }
+    CoroutineScope(Dispatchers.IO).launch {
+      syncExecuteTask(executionId, task, context, args, project.taskRegistry)
+    }
     return executionId
   }
 
   private fun syncExecuteTask(
       executionId: ExecutionId,
       task: Task,
-      context: ProjectContext,
+      projectContext: ProjectContext,
       args: List<String>,
       taskRegistry: TaskRegistry,
   ) {
-    val projectName = context.config.getKey<String>("project.name") ?: "unknown"
+    val projectName = projectContext.config.getKey<String>("project.name") ?: "unknown"
 
     try {
       eventPublisher.publishEvent(executionStartedEvent(projectName, executionId))
@@ -77,7 +84,7 @@ class TaskExecutor(
 
                 eventPublisher.publishEvent(taskStartedEvent(projectName, executionId, it.id))
                 try {
-                  val result = it.execute(environment, context, args)
+                  val result = it.execute(environment, projectContext, args)
                   Thread.sleep(500) // Simulate some delay for demonstration purposes
                   if (!result.success) {
                     logger.info(

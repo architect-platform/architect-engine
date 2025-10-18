@@ -11,6 +11,7 @@ import io.github.architectplatform.api.core.tasks.phase.Phase
 import io.github.architectplatform.engine.plugins.installers.context.InstallersContext
 import java.io.File
 import java.nio.file.Paths
+import org.slf4j.LoggerFactory
 
 class CopyInstallerTask(private val installersContext: InstallersContext) : Task {
 
@@ -18,12 +19,18 @@ class CopyInstallerTask(private val installersContext: InstallersContext) : Task
 
   override fun phase(): Phase = CoreWorkflow.INIT
 
+  private val logger = LoggerFactory.getLogger(this::class.java)
+
   override fun execute(
       environment: Environment,
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
     if (!installersContext.enabled) {
+      logger.info("Installers are not enabled, skipping copy task.")
+      logger.info("ProjectContext: $projectContext")
+      logger.info("InstallersContext: $installersContext")
+      logger.info("ProjectContext: $projectContext")
       return TaskResult.success("Installers are not enabled, skipping copy task.")
     }
     val installersDir = Paths.get(projectContext.dir.toString(), ".installers")

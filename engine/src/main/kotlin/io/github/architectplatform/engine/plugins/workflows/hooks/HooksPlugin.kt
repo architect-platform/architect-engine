@@ -5,12 +5,10 @@ import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.plugins.workflows.WorkflowPlugin
 import io.github.architectplatform.engine.plugins.workflows.hooks.tasks.HooksInstallTask
 import io.github.architectplatform.engine.plugins.workflows.hooks.tasks.HooksVerifyTask
-import jakarta.inject.Singleton
 
 // ------------
 // HooksPlugin
 // ------------
-@Singleton
 class HooksPlugin : WorkflowPlugin(id = "hooks-phases", phases = HooksWorkflow.entries) {
   override fun register(registry: TaskRegistry) {
     super.register(registry)
@@ -18,3 +16,4 @@ class HooksPlugin : WorkflowPlugin(id = "hooks-phases", phases = HooksWorkflow.e
     registry.add(HooksVerifyTask())
   }
 }
+

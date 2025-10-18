@@ -34,22 +34,18 @@ class TaskService(
     val project =
         projectService.getProject(projectName)
             ?: throw IllegalArgumentException("Project not found")
-    val task =
-        project.taskRegistry.all().firstOrNull { it.id == taskId }
-            ?: throw IllegalArgumentException("Task not found")
 
-    fun executeRecursivelyOverSubprojectsFirst(
-        task: Task,
-        project: Project,
-        args: List<String>
-    ): ExecutionId {
+    fun executeRecursivelyOverSubprojectsFirst(project: Project, args: List<String>): ExecutionId {
       project.subProjects.forEach { subProject ->
-        executeRecursivelyOverSubprojectsFirst(task, subProject, args)
+        executeRecursivelyOverSubprojectsFirst(subProject, args)
       }
+      val task =
+          project.taskRegistry.all().firstOrNull { it.id == taskId }
+              ?: throw IllegalArgumentException("Task not found")
       return executor.execute(project, task, project.context, args)
     }
 
-    return executeRecursivelyOverSubprojectsFirst(task, project, args)
+    return executeRecursivelyOverSubprojectsFirst(project, args)
   }
 
   fun getExecutionFlow(executionId: ExecutionId): Flow<ArchitectEvent<ExecutionEvent>> {

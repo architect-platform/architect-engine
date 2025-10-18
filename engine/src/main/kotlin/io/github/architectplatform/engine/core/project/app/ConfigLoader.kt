@@ -11,7 +11,6 @@ class ConfigLoader(private val configParser: ConfigParser) {
   fun load(path: String): Config? {
     val yamlContext = getExternalConfiguration(path)
     if (yamlContext.isEmpty()) {
-      println("No external configuration found, skipping.")
       return null
     }
     return configParser.parse(yamlContext)
@@ -26,7 +25,6 @@ class ConfigLoader(private val configParser: ConfigParser) {
             ?: File(projectPath, "architect.yaml").takeIf { it.exists() }
 
     if (rootYaml == null || rootYaml.readText().isEmpty()) {
-      println("No architect.yml or architect.yaml found in $projectPath, skipping.")
       return configuration.toString()
     }
 

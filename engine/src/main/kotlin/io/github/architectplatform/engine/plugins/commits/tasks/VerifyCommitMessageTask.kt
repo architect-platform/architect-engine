@@ -23,6 +23,8 @@ class VerifyCommitMessageTask(
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
+    println("🔧 Running VerifyCommitMessageTask with context: $context")
+    println("Project context: $projectContext")
     val commitFilePath =
         args.getOrNull(0) ?: return TaskResult.failure("No commit message file path provided")
 

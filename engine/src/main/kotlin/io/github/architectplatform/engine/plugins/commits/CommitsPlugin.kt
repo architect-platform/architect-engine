@@ -4,9 +4,7 @@ import io.github.architectplatform.api.core.plugins.ArchitectPlugin
 import io.github.architectplatform.api.core.tasks.TaskRegistry
 import io.github.architectplatform.engine.plugins.commits.context.CommitsContext
 import io.github.architectplatform.engine.plugins.commits.tasks.VerifyCommitMessageTask
-import jakarta.inject.Singleton
 
-@Singleton
 class CommitsPlugin : ArchitectPlugin<CommitsContext> {
   override val id: String = "commits-plugin"
   override val contextKey: String = "commits"
@@ -17,3 +15,4 @@ class CommitsPlugin : ArchitectPlugin<CommitsContext> {
     registry.add(VerifyCommitMessageTask(context))
   }
 }
+

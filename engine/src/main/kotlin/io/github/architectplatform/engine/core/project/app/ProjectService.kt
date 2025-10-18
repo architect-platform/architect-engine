@@ -3,6 +3,8 @@ package io.github.architectplatform.engine.core.project.app
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.architectplatform.api.core.project.ProjectContext
+import io.github.architectplatform.api.core.project.getKey
+import io.github.architectplatform.engine.core.plugin.app.PluginLoader
 import io.github.architectplatform.engine.core.project.app.repositories.ProjectRepository
 import io.github.architectplatform.engine.core.project.domain.Project
 import io.github.architectplatform.engine.core.tasks.infrastructure.InMemoryTaskRegistry
@@ -16,7 +18,7 @@ import kotlin.io.path.Path
 class ProjectService(
     private val projectRepository: ProjectRepository,
     private val configLoader: ConfigLoader,
-    private val pluginLoader: io.github.architectplatform.engine.core.plugin.app.PluginLoader,
+    private val pluginLoader: PluginLoader,
 ) {
 
   private val logger = LoggerFactory.getLogger(this::class.java)
@@ -33,8 +35,8 @@ class ProjectService(
       }
 
   private fun loadProject(name: String, path: String): Project? {
-    val config = configLoader.load(path) ?: return null
-    val context = ProjectContext(Path(path), config)
+    val projectConfig = configLoader.load(path) ?: return null
+    val projectContext = ProjectContext(Path(path), projectConfig)
 
     // Call this method for every subfolder and build the subProjects list
     val subProjects = mutableListOf<Project>()
@@ -53,45 +55,67 @@ class ProjectService(
     }
 
     println("Loading plugins for project $name at path $path")
-    val plugins = pluginLoader.load(context)
+    val plugins = pluginLoader.load(projectContext)
     val taskRegistry = InMemoryTaskRegistry()
     plugins.forEach {
       try {
         val rawContext =
-            if (it.contextKey.isEmpty()) {
-              // If contextKey is empty, use the plugin's context directly
-              config
-            } else
-            // Otherwise, get the context from the config using the contextKey
-            config[it.contextKey] ?: run { it.context }
+            try {
+              if (projectConfig.containsKey(it.contextKey) ) {
+                logger.info(
+                    "Project: $name, plugin ${it.id} - Context key ${it.contextKey} found in project config")
+                logger.info(
+                    "Project: $name, plugin ${it.id} - Using context from project config: ${projectConfig[it.contextKey]}")
+                projectConfig[it.contextKey]
+              } else {
+                logger.info(
+                    "Project: $name, plugin ${it.id} - " +
+                        "Context key ${it.contextKey} not found in project config, using default context")
+                it.context
+              }
+            } catch (_: Exception) {
+              null
+            }
 
-        require(rawContext != null) {
-          "Context for plugin ${it.id} is null, check your config file"
+        logger.info(
+            "Project: $name, plugin ${it.id} - " + "Raw context for plugin ${it.id}: $rawContext")
+        if (rawContext != null) {
+          val pluginContext: Any =
+              when (rawContext) {
+                is List<*> -> {
+                  // Config contains a list, so we deserialize as List<ctxClass>
+                  rawContext.map { item -> objectMapper.convertValue(item, it.ctxClass) }
+                }
+                else -> {
+                  // Config contains a single object (map), deserialize as ctxClass
+                  objectMapper.convertValue(rawContext, it.ctxClass)
+                }
+              }
+                  ?: throw IllegalArgumentException(
+                      "Invalid context format for plugin ${it.id}: " +
+                          "expected object or list, got ${rawContext::class.qualifiedName}")
+
+          logger.info("Initializing plugin ${it.id} for project $name at path $path")
+          logger.info("Plugin ${it.id} context: $pluginContext")
+          it.init(pluginContext)
         }
 
-        val pluginContext: Any =
-            when (rawContext) {
-              is List<*> -> {
-                // Config contains a list, so we deserialize as List<ctxClass>
-                rawContext.map { item -> objectMapper.convertValue(item, it.ctxClass) }
-              }
+        try {
+          logger.info("Registering plugin ${it.id} for project $name - context: ${it.context}")
+        } catch (_: Exception) {
+          logger.info("Registering plugin ${it.id} for project $name - context: <unavailable>")
+        }
 
-              else -> {
-                // Config contains a single object (map), deserialize as ctxClass
-                objectMapper.convertValue(rawContext, it.ctxClass)
-              }
-            }
-                ?: throw IllegalArgumentException(
-                    "Invalid context format for plugin ${it.id}: " +
-                        "expected object or list, got ${rawContext::class.qualifiedName}")
-        it.init(pluginContext)
-      } catch (_: Exception) {}
-      it.register(taskRegistry)
+        it.register(taskRegistry)
+      } catch (e: Exception) {
+        logger.error("Failed to initialize plugin ${it.id} for project $name at path $path")
+        logger.error("Exception: ${e.message}", e)
+      }
     }
 
     logger.info(
         "Loaded project $name at path $path with ${plugins.size} plugins and ${subProjects.size} subprojects")
-    return Project(name, path, context, plugins, subProjects, taskRegistry)
+    return Project(name, path, projectContext, plugins, subProjects, taskRegistry)
   }
 
   fun registerProject(name: String, path: String) {

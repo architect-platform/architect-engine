@@ -22,7 +22,7 @@ import kotlin.io.path.exists
 class ProjectPluginLoader(
     private val spiLoader: SpiPluginLoader,
     private val downloader: PluginDownloader,
-    private val internalPlugins: List<ArchitectPlugin<*>>,
+    private val internalPlugins: List<InternalPluginProvider>,
     private val httpClient: HttpClient,
     private val eventPublisher: ApplicationEventPublisher<ArchitectEvent<*>>,
 ) : PluginLoader {
@@ -34,7 +34,7 @@ class ProjectPluginLoader(
   override fun load(context: ProjectContext): List<ArchitectPlugin<*>> {
     val enabled = mutableListOf<ArchitectPlugin<*>>()
     // 1) Always include CorePlugin
-    enabled += internalPlugins
+    enabled += internalPlugins.map { it.getPlugin() }
 
     val rawContext = context.config.getKey<Any>("plugins") ?: emptyList<PluginConfig>()
     val plugins: List<PluginConfig> =
