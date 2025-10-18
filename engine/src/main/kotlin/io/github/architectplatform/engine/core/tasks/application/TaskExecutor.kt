@@ -108,7 +108,7 @@ class TaskExecutor(
                           executionId,
                           it.id,
                       ))
-                  logger.info("Exception during execution of task '${it.id}': ${e.message}")
+                  logger.error("Exception during execution of task '${it.id}'", e)
                   return@map TaskResult.failure(
                       "Task '${it.id}' failed with exception: ${e.message ?: "Unknown error"}")
                 }
