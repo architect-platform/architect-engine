@@ -42,7 +42,7 @@ class PhaseExecutorTask(private val phase: Phase, private val registry: TaskRegi
           environment.publish(PhaseTaskStarted(task, phase))
           val result = task.execute(environment, projectContext, args)
           if (result.success) {
-            logger.info("Task ${task.id} in phase ${phase.id} succeeded: ${result.message}")
+            logger.debug("Task ${task.id} in phase ${phase.id} succeeded: ${result.message}")
             environment.publish(PhaseTaskCompleted(task, phase, result))
           } else {
             logger.error("Task ${task.id} in phase ${phase.id} failed: ${result.message}")

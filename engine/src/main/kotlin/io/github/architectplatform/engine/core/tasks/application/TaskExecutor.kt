@@ -67,7 +67,6 @@ class TaskExecutor(
       val results =
           executionOrder
               .map {
-                Thread.sleep(500) // Simulate some delay for demonstration purposes
                 if (taskCache.isCached(it.id)) {
                   eventPublisher.publishEvent(
                       taskSkippedEvent(
@@ -85,9 +84,8 @@ class TaskExecutor(
                 eventPublisher.publishEvent(taskStartedEvent(projectName, executionId, it.id))
                 try {
                   val result = it.execute(environment, projectContext, args)
-                  Thread.sleep(500) // Simulate some delay for demonstration purposes
                   if (!result.success) {
-                    logger.info(
+                    logger.error(
                         "Exception during execution of task '${it.id}' in project '$projectName': ${result.message}")
                     eventPublisher.publishEvent(
                         taskFailedEvent(
@@ -101,7 +99,6 @@ class TaskExecutor(
                   taskCache.store(it.id, result)
                   return@map result
                 } catch (e: Exception) {
-                  Thread.sleep(500) // Simulate some delay for demonstration purposes
                   eventPublisher.publishEvent(
                       taskFailedEvent(
                           projectName,

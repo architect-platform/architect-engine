@@ -27,9 +27,10 @@ class CopyInstallerTask(private val installersContext: InstallersContext) : Task
       args: List<String>
   ): TaskResult {
     if (!installersContext.enabled) {
-      logger.info("Installers are not enabled, skipping copy task.")
-      logger.info("ProjectContext: $projectContext")
-      logger.info("InstallersContext: $installersContext")
+      logger.debug(
+          "Installers are not enabled, skipping copy task, context: {}, projectContext: {}",
+          installersContext,
+          projectContext)
       return TaskResult.success("Installers are not enabled, skipping copy task.")
     }
     val installersDir = Paths.get(projectContext.dir.toString(), ".installers")

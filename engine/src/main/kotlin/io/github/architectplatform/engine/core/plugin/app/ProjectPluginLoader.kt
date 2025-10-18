@@ -13,9 +13,9 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
-import org.slf4j.LoggerFactory
 import java.net.URLClassLoader
 import kotlin.io.path.exists
+import org.slf4j.LoggerFactory
 
 @Singleton
 @ExecuteOn(TaskExecutors.BLOCKING)
@@ -33,7 +33,7 @@ class ProjectPluginLoader(
 
   override fun load(context: ProjectContext): List<ArchitectPlugin<*>> {
     val enabled = mutableListOf<ArchitectPlugin<*>>()
-    // 1) Always include CorePlugin
+    // 1) Always include internal plugins
     enabled += internalPlugins.map { it.getPlugin() }
 
     val rawContext = context.config.getKey<Any>("plugins") ?: emptyList<PluginConfig>()
@@ -43,7 +43,6 @@ class ProjectPluginLoader(
             // Config contains a list, so we deserialize as List<ctxClass>
             rawContext.map { item -> objectMapper.convertValue(item, PluginConfig::class.java) }
           }
-
           else -> {
             throw IllegalArgumentException(
                 "Invalid plugins context format: expected list, got ${rawContext::class.qualifiedName}")

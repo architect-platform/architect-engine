@@ -9,11 +9,12 @@ import io.github.architectplatform.engine.plugins.commits.context.CommitsContext
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
+import org.slf4j.LoggerFactory
 
 class VerifyCommitMessageTask(
     private val context: CommitsContext,
 ) : Task {
-
+  private val logger = LoggerFactory.getLogger(this::class.java)
   override val id: String = "verify-commit-message-task"
 
   override fun phase(): HooksWorkflow = HooksWorkflow.COMMIT_MSG
@@ -23,8 +24,8 @@ class VerifyCommitMessageTask(
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
-    println("🔧 Running VerifyCommitMessageTask with context: $context")
-    println("Project context: $projectContext")
+    logger.info("Running VerifyCommitMessageTask with context: $context")
+    logger.debug("Project Context: $projectContext")
     val commitFilePath =
         args.getOrNull(0) ?: return TaskResult.failure("No commit message file path provided")
 
@@ -36,7 +37,7 @@ class VerifyCommitMessageTask(
           return TaskResult.failure("Failed to read commit message: ${e.message}")
         }
 
-    println("🔍 Verifying commit message: $commitMessage")
+    logger.debug("Verifying Commit Message: $commitMessage")
 
     val pattern =
         Pattern.compile(

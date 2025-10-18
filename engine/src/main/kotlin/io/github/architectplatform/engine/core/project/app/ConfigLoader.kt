@@ -3,10 +3,13 @@ package io.github.architectplatform.engine.core.project.app
 import io.github.architectplatform.api.core.project.Config
 import io.github.architectplatform.engine.core.project.app.ports.ConfigParser
 import jakarta.inject.Singleton
+import org.slf4j.LoggerFactory
 import java.io.File
 
 @Singleton
 class ConfigLoader(private val configParser: ConfigParser) {
+
+  private val logger = LoggerFactory.getLogger(ConfigLoader::class.java)
 
   fun load(path: String): Config? {
     val yamlContext = getExternalConfiguration(path)
@@ -31,7 +34,7 @@ class ConfigLoader(private val configParser: ConfigParser) {
     try {
       configuration.append(rootYaml.readText()).append("\n")
     } catch (e: Exception) {
-      println("Failed to read ${rootYaml.name}, skipping. Reason: ${e.message}")
+      logger.error("Failed to read ${rootYaml.name}, skipping.", e)
     }
 
     // 2) Load all files in .architect folder
@@ -57,7 +60,7 @@ class ConfigLoader(private val configParser: ConfigParser) {
       try {
         configuration.append(file.readText()).append("\n")
       } catch (e: Exception) {
-        println("Failed to read file: ${file.name}, skipping. Reason: ${e.message}")
+        logger.error("Failed to read ${file.name}, skipping.", e)
       }
     }
 
