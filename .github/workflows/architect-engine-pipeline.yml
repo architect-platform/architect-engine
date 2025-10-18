@@ -63,6 +63,9 @@ jobs:
         run: architect test --plain
 
       - name: Release
+        concurrency:
+          group: release-${{ github.workflow }}-${{ github.event.number || github.ref }}
+          cancel-in-progress: false
         run: architect release --plain
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
