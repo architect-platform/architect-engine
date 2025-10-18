@@ -25,14 +25,15 @@ class ProjectsApiController(
 
   @Get
   fun getAll(): List<ProjectDTO> {
-    println("Getting all projects")
+    logger.info("Fetching all projects")
     return projectService.getAllProjects().map(Project::toDTO).also {
-      println("Projects found: $it")
+      logger.debug("Projects found: $it")
     }
   }
 
   @Post
   fun registerProject(@Body request: RegisterProjectRequest): ProjectDTO {
+    logger.info("Registering project: ${request.name} at path: ${request.path}")
     projectService.registerProject(request.name, request.path)
     val project =
         projectService.getProject(request.name)

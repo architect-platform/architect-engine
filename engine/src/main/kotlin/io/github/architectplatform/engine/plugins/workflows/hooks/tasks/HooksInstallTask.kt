@@ -11,6 +11,7 @@ import io.github.architectplatform.api.core.tasks.phase.Phase
 import java.nio.file.Paths
 
 class HooksInstallTask : Task {
+
   override fun phase(): Phase = CoreWorkflow.INIT
 
   override val id: String = "hooks-install"

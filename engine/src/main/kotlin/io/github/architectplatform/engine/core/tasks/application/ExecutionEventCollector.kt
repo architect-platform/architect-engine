@@ -8,10 +8,12 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.slf4j.LoggerFactory
 
 @Singleton
 class ExecutionEventCollector {
 
+  private val logger = LoggerFactory.getLogger(this::class.java)
   private val flows = mutableMapOf<ExecutionId, MutableSharedFlow<ArchitectEvent<ExecutionEvent>>>()
 
   private fun newFlow(): MutableSharedFlow<ArchitectEvent<ExecutionEvent>> =
@@ -33,7 +35,7 @@ class ExecutionEventCollector {
       val flow = flows.getOrPut(event.executionId) { newFlow() }
       val emitted = flow.tryEmit(eventWrapper as ArchitectEvent<ExecutionEvent>)
       if (!emitted) {
-        println("❗ Could not emit event for ${event.executionId}")
+        logger.warn("Could not emit event for ${event.executionId}")
       }
     }
   }

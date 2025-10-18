@@ -2,11 +2,9 @@ package io.github.architectplatform.engine.core.tasks.infrastructure
 
 import io.github.architectplatform.api.core.tasks.Task
 import io.github.architectplatform.api.core.tasks.TaskRegistry
-import jakarta.inject.Singleton
 import java.util.concurrent.ConcurrentHashMap
 
 /** In-memory registry implementation. */
-@Singleton
 class InMemoryTaskRegistry : TaskRegistry {
   private val tasks = ConcurrentHashMap<String, Task>()
 

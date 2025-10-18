@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 class ProjectPluginLoader(
     private val spiLoader: SpiPluginLoader,
     private val downloader: PluginDownloader,
-    private val internalPlugins: List<ArchitectPlugin<*>>,
+    private val internalPlugins: List<InternalPluginProvider>,
     private val httpClient: HttpClient,
     private val eventPublisher: ApplicationEventPublisher<ArchitectEvent<*>>,
 ) : PluginLoader {
@@ -33,17 +33,16 @@ class ProjectPluginLoader(
 
   override fun load(context: ProjectContext): List<ArchitectPlugin<*>> {
     val enabled = mutableListOf<ArchitectPlugin<*>>()
-    // 1) Always include CorePlugin
-    enabled += internalPlugins
+    // 1) Always include internal plugins
+    enabled += internalPlugins.map { it.getPlugin() }
 
-    val rawContext = context.config.getKey<Any>("plugins") ?: Object()
+    val rawContext = context.config.getKey<Any>("plugins") ?: emptyList<PluginConfig>()
     val plugins: List<PluginConfig> =
         when (rawContext) {
           is List<*> -> {
             // Config contains a list, so we deserialize as List<ctxClass>
             rawContext.map { item -> objectMapper.convertValue(item, PluginConfig::class.java) }
           }
-
           else -> {
             throw IllegalArgumentException(
                 "Invalid plugins context format: expected list, got ${rawContext::class.qualifiedName}")
