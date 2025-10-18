@@ -23,9 +23,6 @@ import io.micronaut.scheduling.annotation.ExecuteOn
 import jakarta.inject.Singleton
 import java.io.OutputStream
 import java.io.PrintStream
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 
 @Singleton
@@ -45,9 +42,7 @@ class TaskExecutor(
       args: List<String>
   ): ExecutionId {
     val executionId = generateExecutionId()
-    CoroutineScope(Dispatchers.IO).launch {
-      syncExecuteTask(executionId, task, context, args, project.taskRegistry)
-    }
+    syncExecuteTask(executionId, task, context, args, project.taskRegistry)
     return executionId
   }
 
