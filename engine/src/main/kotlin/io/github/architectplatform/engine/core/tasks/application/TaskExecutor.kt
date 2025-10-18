@@ -79,6 +79,7 @@ class TaskExecutor(
                 eventPublisher.publishEvent(taskStartedEvent(projectName, executionId, it.id))
                 try {
                   val result = it.execute(environment, projectContext, args)
+                    logger.debug("Executed task '${it.id}' with result: $result")
                   if (!result.success) {
                     logger.error(
                         "Exception during execution of task '${it.id}' in project '$projectName': ${result.message}")

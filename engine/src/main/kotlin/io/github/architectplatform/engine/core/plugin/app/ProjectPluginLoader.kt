@@ -89,7 +89,7 @@ class ProjectPluginLoader(
     val response =
         httpClient.toBlocking().retrieve(req, String::class.java)
             ?: error("Failed to fetch latest tag from $url")
-    val tagRegex = Regex("href=\"/[^/]+/$repo/releases/tag/(v[0-9.]+)\"")
+    val tagRegex = Regex("href=\"/[^/]+/$repo/releases/tag/([^\"]+)\"")
     val matchResult =
         tagRegex.find(response) ?: error("Failed to parse latest tag from response: $response")
     return matchResult.groupValues[1]

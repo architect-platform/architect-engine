@@ -15,13 +15,29 @@ class HooksVerifyTask : Task {
 
   override val id: String = "hooks-verify"
 
+  private fun findGitDir(projectPath: String): String? {
+    var currentPath = Paths.get(projectPath).toAbsolutePath()
+
+    while (true) {
+      val gitPath = currentPath.resolve(".git")
+      if (gitPath.toFile().exists() && gitPath.toFile().isDirectory) {
+        return gitPath.toString()
+      }
+
+      val parentPath = currentPath.parent ?: break
+      currentPath = parentPath
+    }
+    return null
+  }
+
   override fun execute(
       environment: Environment,
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
-    val projectPath = projectContext.dir
-    val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()
+    val gitDir = findGitDir(projectContext.dir.toString())
+        ?: return TaskResult.failure("No .git directory found in project hierarchy")
+    val hooksDir = Paths.get(gitDir, "hooks").toAbsolutePath()
     if (!Files.exists(hooksDir)) {
       return TaskResult.failure("Hooks directory does not exist")
     }
@@ -30,9 +46,7 @@ class HooksVerifyTask : Task {
     val classLoader = Thread.currentThread().contextClassLoader
 
     val resourceUrl = classLoader.getResource(resourceRoot)
-    if (resourceUrl == null) {
-      return TaskResult.failure("Resource $resourceRoot not found")
-    }
+      ?: return TaskResult.failure("Resource $resourceRoot not found")
 
     val expectedHooks: List<String> =
         when (resourceUrl.protocol) {

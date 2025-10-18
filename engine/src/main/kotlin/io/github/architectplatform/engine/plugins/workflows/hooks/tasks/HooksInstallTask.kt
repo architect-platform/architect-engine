@@ -16,14 +16,30 @@ class HooksInstallTask : Task {
 
   override val id: String = "hooks-install"
 
+  private fun findGitDir(projectPath: String): String? {
+    var currentPath = Paths.get(projectPath).toAbsolutePath()
+
+    while (true) {
+      val gitPath = currentPath.resolve(".git")
+      if (gitPath.toFile().exists() && gitPath.toFile().isDirectory) {
+        return gitPath.toString()
+      }
+
+      val parentPath = currentPath.parent ?: break
+      currentPath = parentPath
+    }
+    return null
+  }
+
   override fun execute(
       environment: Environment,
       projectContext: ProjectContext,
       args: List<String>
   ): TaskResult {
     val resourceRoot = "hooks"
-    val projectPath = projectContext.dir
-    val hooksDir = Paths.get(projectPath.toString(), ".git", "hooks").toAbsolutePath()
+    val gitDir = findGitDir(projectContext.dir.toString())
+        ?: return TaskResult.failure("No .git directory found in project hierarchy")
+    val hooksDir = Paths.get(gitDir, "hooks").toAbsolutePath()
     val resourceExtractor = environment.service(ResourceExtractor::class.java)
     val commandExecutor = environment.service(CommandExecutor::class.java)
     resourceExtractor.copyDirectoryFromResources(this.javaClass.classLoader, resourceRoot, hooksDir)
