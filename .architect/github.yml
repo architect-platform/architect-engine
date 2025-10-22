@@ -5,6 +5,7 @@ github:
   pipelines:
     - name: architect-engine-pipeline
       type: github/classic-java-17
+      path: "**"
 
   release:
     assets:

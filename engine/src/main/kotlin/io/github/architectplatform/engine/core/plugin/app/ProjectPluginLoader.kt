@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 class ProjectPluginLoader(
     private val spiLoader: SpiPluginLoader,
     private val downloader: PluginDownloader,
-    private val internalPlugins: List<InternalPluginProvider>,
+    private val internalPlugins: List<CommonPlugin>,
     private val httpClient: HttpClient,
     private val eventPublisher: ApplicationEventPublisher<ArchitectEvent<*>>,
 ) : PluginLoader {

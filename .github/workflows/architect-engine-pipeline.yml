@@ -6,9 +6,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**'
   pull_request:
     branches:
       - main
+    paths:
+      - '**'
 
 env:
   REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
