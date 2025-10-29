@@ -43,10 +43,11 @@ class CopyInstallerTask(private val installersContext: InstallersContext) : Task
       val content = file.readText()
       val replacedContent =
           content
-              .replace("{{owner}}", installersContext.owner)
+              .replace("{{repo}}", installersContext.repo)
               .replace("{{name}}", installersContext.name)
               .replace("{{applicationName}}", installersContext.applicationName)
               .replace("{{assetType}}", installersContext.assetType)
+              .replace("{{prefix}}", installersContext.prefix)
       file.writeText(replacedContent)
       commandExecutor.execute("chmod +x ${file.path}")
     }
