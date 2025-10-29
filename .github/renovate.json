@@ -2,13 +2,16 @@
   "extends": [
     "config:recommended"
   ],
+  "automerge": true,
+  "automergeType": "branch",
+  "automergeStrategy": "auto",
+  "requiredStatusChecks": null,
   "packageRules": [
     {
       "matchUpdateTypes": [
         "patch",
         "minor"
       ],
-      "automerge": true,
       "groupName": "all-patch-and-minor"
     },
     {
