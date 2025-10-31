@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-REPO="architect-platform/architect-engine"
+REPO="architect-platform/architect"
 NAME="architect-engine"
 ASSET_TYPE="jar"
 APPLICATION_NAME="architect-engine"
