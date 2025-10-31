@@ -3,7 +3,7 @@ set -e
 
 # Installer script for monorepo-based releases
 
-REPO="architect-platform/architect"
+REPO="architect-platform/architect-engine"
 NAME="architect-engine"
 ASSET_TYPE="jar"
 APPLICATION_NAME="architect-engine"
