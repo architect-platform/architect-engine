@@ -2,17 +2,23 @@
   "extends": [
     "config:recommended"
   ],
-  "automerge": true,
   "automergeType": "branch",
   "automergeStrategy": "auto",
-  "requiredStatusChecks": null,
   "packageRules": [
     {
       "matchUpdateTypes": [
         "patch",
         "minor"
       ],
+      "automerge": true,
       "groupName": "all-patch-and-minor"
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false,
+      "groupName": "major-upgrades"
     },
     {
       "groupName": "kotlin-libs",
@@ -26,12 +32,6 @@
       "matchPackageNames": [
         "/spring-boot-dependencies/"
       ]
-    },
-    {
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "major-upgrades"
     },
     {
       "matchManagers": [
@@ -60,42 +60,5 @@
       ],
       "groupName": "docker-images"
     }
-  ],
-  "gradle": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)build\\.gradle(.kts)?$/"
-    ]
-  },
-  "maven": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)pom\\.xml$/"
-    ]
-  },
-  "npm": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)package\\.json$/",
-      "/(^|/)package-lock\\.json$/"
-    ]
-  },
-  "dockerfile": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)Dockerfile$/"
-    ]
-  },
-  "github-actions": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
-    ]
-  },
-  "helm-values": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)Chart\\.yaml$/"
-    ]
-  }
+  ]
 }
