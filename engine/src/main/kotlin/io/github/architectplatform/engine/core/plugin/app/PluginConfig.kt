@@ -7,5 +7,7 @@ data class PluginConfig(
     val asset: String = "$name.$assetType",
     val type: String = "github",
     val path: String = ".",
-    val owner: String = "architect-platform"
+    val owner: String = "architect-platform",
+    val repo: String = "$owner/$name",
+    val pattern: String = "$name-"
 )

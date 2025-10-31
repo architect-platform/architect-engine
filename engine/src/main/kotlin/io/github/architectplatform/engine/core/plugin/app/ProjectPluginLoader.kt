@@ -55,12 +55,12 @@ class ProjectPluginLoader(
             "github" -> {
               val tag =
                   if (plugin.version == "latest") {
-                    resolveLatestTag(plugin.owner, plugin.name)
+                    resolveLatestTag(plugin.repo, plugin.pattern)
                   } else {
-                    "v${plugin.version}"
+                    "${plugin.name}-${plugin.version}"
                   }
               val url =
-                  "https://github.com/${plugin.owner}/${plugin.name}/releases/download/$tag/${plugin.asset}"
+                  "https://github.com/${plugin.repo}/releases/download/$tag/${plugin.asset}"
               downloader.download(url)
             }
             "local" -> {
@@ -83,15 +83,42 @@ class ProjectPluginLoader(
     return enabled
   }
 
-  private fun resolveLatestTag(owner: String, repo: String): String {
-    val url = "https://github.com/$owner/$repo/releases/latest"
-    val req: HttpRequest<*> = HttpRequest.GET<Any>(url)
-    val response =
-        httpClient.toBlocking().retrieve(req, String::class.java)
-            ?: error("Failed to fetch latest tag from $url")
-    val tagRegex = Regex("href=\"/[^/]+/$repo/releases/tag/([^\"]+)\"")
-    val matchResult =
-        tagRegex.find(response) ?: error("Failed to parse latest tag from response: $response")
-    return matchResult.groupValues[1]
-  }
+    private fun resolveLatestTag(repo: String, prefix: String): String {
+        // repo = "owner/repo"
+        val apiUrl = "https://api.github.com/repos/$repo/tags"
+        val req: HttpRequest<*> = HttpRequest.GET<Any>(apiUrl)
+        val response = httpClient.toBlocking().retrieve(req, String::class.java)
+            ?: error("Failed to fetch tags from $apiUrl")
+
+        // Parse JSON array of tags
+        val tags: List<Map<String, Any>> = objectMapper.readValue(response, List::class.java) as List<Map<String, Any>>
+
+        // Filter by prefix
+        val matchingTags = tags.mapNotNull { it["name"] as? String }.filter { it.startsWith(prefix) }
+
+        if (matchingTags.isEmpty()) {
+            error("No tags starting with '$prefix' found in $repo")
+        }
+
+        // Pick the latest by semver-like comparison
+        val latestTag = matchingTags.maxWithOrNull { a, b ->
+            runCatching { compareVersions(a, b) }.getOrDefault(0)
+        } ?: matchingTags.last()
+
+        return latestTag
+    }
+
+    // Simple semver comparator
+    private fun compareVersions(a: String, b: String): Int {
+        val partsA = a.removePrefix("v").split(".")
+        val partsB = b.removePrefix("v").split(".")
+        for (i in 0 until maxOf(partsA.size, partsB.size)) {
+            val nA = partsA.getOrNull(i)?.toIntOrNull() ?: 0
+            val nB = partsB.getOrNull(i)?.toIntOrNull() ?: 0
+            if (nA != nB) return nA - nB
+        }
+        return 0
+    }
+
+
 }
